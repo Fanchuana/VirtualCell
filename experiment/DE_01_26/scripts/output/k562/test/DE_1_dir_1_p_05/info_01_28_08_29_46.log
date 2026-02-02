@@ -1,0 +1,299 @@
+========== Experiment Configuration ==========
+Config Name:              DE_1_dir_1_p_05
+Stage:                    test
+GPU ID:                   2
+DE_DECODER:               True
+DE_LOSS_WEIGHT:           1
+DIR_DECODER:              True
+DIR_LOSS_WEIGHT:          1
+DIR_LOSS_TYPE:            MSE
+P_THRESHOLD:              0.05
+Test dataset: CELL=k562
+Stdout path:  INFO_LOG=/work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/scripts/output/k562/test/DE_1_dir_1_p_05/info_01_28_08_29_46.log
+Stderr path:  ERR_LOG=/work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/scripts/output/k562/test/DE_1_dir_1_p_05/error_01_28_08_29_46.log
+==============================================
+INFO:state._cli._tx._predict:Loaded config from /work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/model_output/k562/DE_1_dir_1_p_05/config.yaml
+INFO:cell_load.data_modules.perturbation_dataloader:Loaded data module configuration from /work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/model_output/k562/DE_1_dir_1_p_05/data_module.torch
+INFO:cell_load.config:Configuration validation passed
+INFO:cell_load.data_modules.perturbation_dataloader:Initializing DataModule: batch_size=64, workers=16, random_seed=42
+INFO:cell_load.data_modules.perturbation_dataloader:Processing dataset replogle_proper:
+INFO:cell_load.data_modules.perturbation_dataloader:  - Training dataset: True
+INFO:cell_load.data_modules.perturbation_dataloader:  - Zeroshot cell types: []
+INFO:cell_load.data_modules.perturbation_dataloader:  - Fewshot cell types: ['k562']
+/work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad
+replogle_proper k562 {'val': 104, 'test': 624}
+Processing replogle_proper:   0%|          | 0/1 [00:00<?, ?it/s]WARNING:cell_load.dataset._perturbation:No cell barcode information found in /work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad. Generating generic barcodes.
+                                                                 Processing replogle_proper:   0%|          | 0/1 [00:05<?, ?it/s]Processing replogle_proper: 100%|██████████| 1/1 [00:05<00:00,  5.64s/it]Processing replogle_proper: 100%|██████████| 1/1 [00:05<00:00,  5.64s/it]
+INFO:cell_load.data_modules.perturbation_dataloader:
+
+INFO:cell_load.data_modules.perturbation_dataloader:Done! Train / Val / Test splits: 4 / 1 / 1
+INFO:state._cli._tx._predict:Loaded data module from /work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/model_output/k562/DE_1_dir_1_p_05/data_module.torch
+Seed set to 42
+INFO:state._cli._tx._predict:Loading model from /work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/model_output/k562/DE_1_dir_1_p_05/checkpoints/best.ckpt
+INFO:state.tx.models.vae._data:Loading Perturbation Stats (LogFC & P-value) into memory...
+INFO:state.tx.models.vae._data:Perturbation Stats loaded.
+INFO:state.tx.models.base:Loaded decoder from checkpoint decoder_cfg: {'latent_dim': 2000, 'gene_dim': 2000, 'hidden_dims': [1024, 1024, 512], 'dropout': 0.1, 'residual_decoder': False}
+INFO:state._cli._tx._predict:Model loaded successfully.
+INFO:cell_load.data_modules.samplers:Creating perturbation batch sampler with metadata caching (using codes)...
+INFO:cell_load.data_modules.samplers:Total # cells 61654. Cell set size mean / std before resampling: 53.24 / 18.44.
+INFO:cell_load.data_modules.samplers:Creating meta-batches with cell_sentence_len=64...
+INFO:cell_load.data_modules.samplers:Of all batches, 1158 were full and 0 were partial.
+INFO:cell_load.data_modules.samplers:Sampler created with 1158 batches in 0.02 seconds.
+INFO:state._cli._tx._predict:Generating predictions on test set using manual loop...
+Processed replogle: 584757 train, 18384 val, 61654 test
+BA LOSS BUILT: True
+Loading pretrained VAE...
+Pretrained VAE loaded!
+is_gene_space: True
+VAETransitionPerturbationModel(
+  (loss_fn): MSELoss()
+  (gene_decoder): LatentToGeneDecoder(
+    (decoder): Sequential(
+      (0): Linear(in_features=2000, out_features=1024, bias=True)
+      (1): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+      (2): GELU(approximate='none')
+      (3): Dropout(p=0.1, inplace=False)
+      (4): Linear(in_features=1024, out_features=1024, bias=True)
+      (5): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+      (6): GELU(approximate='none')
+      (7): Dropout(p=0.1, inplace=False)
+      (8): Linear(in_features=1024, out_features=512, bias=True)
+      (9): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      (10): GELU(approximate='none')
+      (11): Dropout(p=0.1, inplace=False)
+      (12): Linear(in_features=512, out_features=2000, bias=True)
+      (13): ReLU()
+    )
+  )
+  (main_loss_fn): BioAlignedLoss(
+    (sinkhorn_loss): SamplesLoss()
+  )
+  (vae_latent_loss_fn): BioAlignedLoss(
+    (sinkhorn_loss): SamplesLoss()
+  )
+  (DE_loss_fn): BCEWithLogitsLoss()
+  (direction_loss_fn): MSELoss()
+  (vae): VAE(
+    (encoder): Encoder(
+      (network): ModuleList(
+        (0): Sequential(
+          (0): Dropout(p=0.0, inplace=False)
+          (1): Linear(in_features=2000, out_features=1024, bias=True)
+          (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (3): PReLU(num_parameters=1)
+        )
+        (1-2): 2 x Sequential(
+          (0): Dropout(p=0.0, inplace=False)
+          (1): Linear(in_features=1024, out_features=1024, bias=True)
+          (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (3): PReLU(num_parameters=1)
+        )
+        (3): Linear(in_features=1024, out_features=128, bias=True)
+      )
+    )
+    (decoder): Decoder(
+      (network): ModuleList(
+        (0): Sequential(
+          (0): Linear(in_features=128, out_features=1024, bias=True)
+          (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): PReLU(num_parameters=1)
+        )
+        (1-2): 2 x Sequential(
+          (0): Dropout(p=0.0, inplace=False)
+          (1): Linear(in_features=1024, out_features=1024, bias=True)
+          (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (3): PReLU(num_parameters=1)
+        )
+        (3): Linear(in_features=1024, out_features=2000, bias=True)
+      )
+    )
+    (loss_autoencoder): MSELoss()
+  )
+  (vae_encoder): Encoder(
+    (network): ModuleList(
+      (0): Sequential(
+        (0): Dropout(p=0.0, inplace=False)
+        (1): Linear(in_features=2000, out_features=1024, bias=True)
+        (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): PReLU(num_parameters=1)
+      )
+      (1-2): 2 x Sequential(
+        (0): Dropout(p=0.0, inplace=False)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+        (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): PReLU(num_parameters=1)
+      )
+      (3): Linear(in_features=1024, out_features=128, bias=True)
+    )
+  )
+  (vae2transf_dim_encoder): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+  )
+  (pert_encoder): Sequential(
+    (0): Linear(in_features=2024, out_features=128, bias=True)
+  )
+  (transformer_backbone): LlamaModel(
+    (embed_tokens): Embedding(32000, 128, padding_idx=0)
+    (layers): ModuleList(
+      (0-7): 8 x LlamaDecoderLayer(
+        (self_attn): LlamaAttention(
+          (q_proj): Linear(in_features=128, out_features=696, bias=False)
+          (k_proj): Linear(in_features=128, out_features=696, bias=False)
+          (v_proj): Linear(in_features=128, out_features=696, bias=False)
+          (o_proj): Linear(in_features=696, out_features=128, bias=False)
+        )
+        (mlp): LlamaMLP(
+          (gate_proj): Linear(in_features=128, out_features=2784, bias=False)
+          (up_proj): Linear(in_features=128, out_features=2784, bias=False)
+          (down_proj): Linear(in_features=2784, out_features=128, bias=False)
+          (act_fn): SiLU()
+        )
+        (input_layernorm): LlamaRMSNorm((128,), eps=1e-06)
+        (post_attention_layernorm): LlamaRMSNorm((128,), eps=1e-06)
+      )
+    )
+    (norm): LlamaRMSNorm((128,), eps=1e-06)
+    (rotary_emb): LlamaRotaryEmbedding()
+  )
+  (vae_decoder): Decoder(
+    (network): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): PReLU(num_parameters=1)
+      )
+      (1-2): 2 x Sequential(
+        (0): Dropout(p=0.0, inplace=False)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+        (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): PReLU(num_parameters=1)
+      )
+      (3): Linear(in_features=1024, out_features=2000, bias=True)
+    )
+  )
+  (transf2vae_dim_decoder): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+  )
+  (DE_decoder): MultiLabelModelBase(
+    (ffn): FeedForward(
+      (fc1): Linear(in_features=128, out_features=2560, bias=False)
+      (fc2): Linear(in_features=2560, out_features=128, bias=False)
+      (fc3): Linear(in_features=128, out_features=2560, bias=False)
+    )
+    (ffn_norm): RMSNorm()
+    (dropout): Dropout(p=0.5, inplace=False)
+    (final_layer): Linear(in_features=128, out_features=2000, bias=False)
+  )
+  (direction_decoder): MultiLabelModelBase(
+    (ffn): FeedForward(
+      (fc1): Linear(in_features=128, out_features=2560, bias=False)
+      (fc2): Linear(in_features=2560, out_features=128, bias=False)
+      (fc3): Linear(in_features=128, out_features=2560, bias=False)
+    )
+    (ffn_norm): RMSNorm()
+    (dropout): Dropout(p=0.5, inplace=False)
+    (final_layer): Linear(in_features=128, out_features=2000, bias=False)
+  )
+  (project_out): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+  )
+  (batch_encoder): Embedding(56, 128)
+  (relu): ReLU()
+)
+Predicting:   0%|          | 0/1158 [00:00<?, ?batch/s]INFO:cell_load.data_modules.samplers:Of all batches, 1158 were full and 0 were partial.
+Predicting:   0%|          | 1/1158 [00:02<52:47,  2.74s/batch]Predicting:   1%|          | 7/1158 [00:02<05:48,  3.30batch/s]Predicting:   1%|          | 13/1158 [00:02<02:43,  6.98batch/s]Predicting:   2%|▏         | 19/1158 [00:03<01:39, 11.41batch/s]Predicting:   2%|▏         | 25/1158 [00:03<01:08, 16.60batch/s]Predicting:   3%|▎         | 31/1158 [00:03<00:50, 22.15batch/s]Predicting:   3%|▎         | 37/1158 [00:03<00:39, 28.14batch/s]Predicting:   4%|▎         | 43/1158 [00:03<00:33, 33.18batch/s]Predicting:   4%|▍         | 49/1158 [00:03<00:28, 38.41batch/s]Predicting:   5%|▍         | 55/1158 [00:03<00:26, 41.57batch/s]Predicting:   5%|▌         | 61/1158 [00:03<00:23, 45.73batch/s]Predicting:   6%|▌         | 67/1158 [00:03<00:22, 48.22batch/s]Predicting:   6%|▋         | 73/1158 [00:04<00:21, 51.28batch/s]Predicting:   7%|▋         | 79/1158 [00:04<00:20, 51.66batch/s]Predicting:   7%|▋         | 85/1158 [00:04<00:20, 52.97batch/s]Predicting:   8%|▊         | 91/1158 [00:04<00:19, 54.75batch/s]Predicting:   8%|▊         | 97/1158 [00:04<00:18, 56.01batch/s]Predicting:   9%|▉         | 103/1158 [00:04<00:18, 56.47batch/s]Predicting:   9%|▉         | 109/1158 [00:04<00:18, 57.04batch/s]Predicting:  10%|▉         | 115/1158 [00:04<00:18, 57.42batch/s]Predicting:  10%|█         | 121/1158 [00:04<00:18, 56.54batch/s]Predicting:  11%|█         | 127/1158 [00:04<00:18, 56.04batch/s]Predicting:  11%|█▏        | 133/1158 [00:05<00:18, 56.37batch/s]Predicting:  12%|█▏        | 139/1158 [00:05<00:18, 55.25batch/s]Predicting:  13%|█▎        | 145/1158 [00:05<00:18, 56.12batch/s]Predicting:  13%|█▎        | 151/1158 [00:05<00:17, 57.15batch/s]Predicting:  14%|█▎        | 157/1158 [00:05<00:17, 56.99batch/s]Predicting:  14%|█▍        | 164/1158 [00:05<00:17, 57.93batch/s]Predicting:  15%|█▍        | 171/1158 [00:05<00:16, 59.61batch/s]Predicting:  15%|█▌        | 177/1158 [00:05<00:16, 59.05batch/s]Predicting:  16%|█▌        | 183/1158 [00:05<00:16, 58.82batch/s]Predicting:  16%|█▋        | 189/1158 [00:06<00:16, 58.89batch/s]Predicting:  17%|█▋        | 196/1158 [00:06<00:16, 59.80batch/s]Predicting:  18%|█▊        | 203/1158 [00:06<00:15, 61.27batch/s]Predicting:  18%|█▊        | 210/1158 [00:06<00:15, 59.26batch/s]Predicting:  19%|█▊        | 216/1158 [00:06<00:15, 59.20batch/s]Predicting:  19%|█▉        | 222/1158 [00:06<00:15, 58.90batch/s]Predicting:  20%|█▉        | 229/1158 [00:06<00:15, 58.87batch/s]Predicting:  20%|██        | 235/1158 [00:06<00:15, 58.89batch/s]Predicting:  21%|██        | 241/1158 [00:06<00:15, 58.19batch/s]Predicting:  21%|██▏       | 247/1158 [00:07<00:15, 58.19batch/s]Predicting:  22%|██▏       | 254/1158 [00:07<00:15, 59.44batch/s]Predicting:  22%|██▏       | 260/1158 [00:07<00:15, 58.87batch/s]Predicting:  23%|██▎       | 267/1158 [00:07<00:14, 59.76batch/s]Predicting:  24%|██▎       | 274/1158 [00:07<00:14, 59.90batch/s]Predicting:  24%|██▍       | 281/1158 [00:07<00:14, 59.29batch/s]Predicting:  25%|██▍       | 287/1158 [00:07<00:14, 58.48batch/s]Predicting:  25%|██▌       | 293/1158 [00:07<00:14, 58.28batch/s]Predicting:  26%|██▌       | 299/1158 [00:07<00:14, 58.68batch/s]Predicting:  26%|██▋       | 305/1158 [00:08<00:14, 58.77batch/s]Predicting:  27%|██▋       | 311/1158 [00:08<00:14, 58.23batch/s]Predicting:  27%|██▋       | 317/1158 [00:08<00:14, 58.12batch/s]Predicting:  28%|██▊       | 323/1158 [00:08<00:14, 58.62batch/s]Predicting:  28%|██▊       | 329/1158 [00:08<00:14, 58.70batch/s]Predicting:  29%|██▉       | 335/1158 [00:08<00:13, 59.00batch/s]Predicting:  29%|██▉       | 341/1158 [00:08<00:14, 57.99batch/s]Predicting:  30%|██▉       | 347/1158 [00:08<00:13, 58.39batch/s]Predicting:  30%|███       | 353/1158 [00:08<00:13, 58.54batch/s]Predicting:  31%|███       | 359/1158 [00:08<00:13, 57.40batch/s]Predicting:  32%|███▏      | 365/1158 [00:09<00:13, 57.44batch/s]Predicting:  32%|███▏      | 372/1158 [00:09<00:13, 58.68batch/s]Predicting:  33%|███▎      | 378/1158 [00:09<00:13, 58.54batch/s]Predicting:  33%|███▎      | 384/1158 [00:09<00:13, 57.97batch/s]Predicting:  34%|███▎      | 390/1158 [00:09<00:13, 57.36batch/s]Predicting:  34%|███▍      | 397/1158 [00:09<00:13, 58.25batch/s]Predicting:  35%|███▍      | 403/1158 [00:09<00:13, 57.95batch/s]Predicting:  35%|███▌      | 409/1158 [00:09<00:12, 58.12batch/s]Predicting:  36%|███▌      | 415/1158 [00:09<00:12, 57.69batch/s]Predicting:  36%|███▋      | 421/1158 [00:10<00:12, 58.19batch/s]Predicting:  37%|███▋      | 427/1158 [00:10<00:12, 57.65batch/s]Predicting:  37%|███▋      | 433/1158 [00:10<00:12, 57.67batch/s]Predicting:  38%|███▊      | 439/1158 [00:10<00:12, 57.61batch/s]Predicting:  38%|███▊      | 445/1158 [00:10<00:12, 57.80batch/s]Predicting:  39%|███▉      | 451/1158 [00:10<00:12, 57.36batch/s]Predicting:  39%|███▉      | 457/1158 [00:10<00:12, 57.93batch/s]Predicting:  40%|███▉      | 463/1158 [00:10<00:12, 55.92batch/s]Predicting:  41%|████      | 469/1158 [00:10<00:12, 54.17batch/s]Predicting:  41%|████      | 475/1158 [00:10<00:12, 52.76batch/s]Predicting:  42%|████▏     | 481/1158 [00:11<00:12, 53.33batch/s]Predicting:  42%|████▏     | 487/1158 [00:11<00:12, 54.22batch/s]Predicting:  43%|████▎     | 493/1158 [00:11<00:12, 54.64batch/s]Predicting:  43%|████▎     | 499/1158 [00:11<00:12, 52.27batch/s]Predicting:  44%|████▎     | 505/1158 [00:11<00:12, 52.41batch/s]Predicting:  44%|████▍     | 512/1158 [00:11<00:11, 54.96batch/s]Predicting:  45%|████▍     | 518/1158 [00:11<00:12, 52.77batch/s]Predicting:  45%|████▌     | 524/1158 [00:11<00:11, 53.66batch/s]Predicting:  46%|████▌     | 530/1158 [00:12<00:11, 54.42batch/s]Predicting:  46%|████▋     | 536/1158 [00:12<00:11, 55.13batch/s]Predicting:  47%|████▋     | 542/1158 [00:12<00:11, 53.63batch/s]Predicting:  47%|████▋     | 548/1158 [00:12<00:11, 54.78batch/s]Predicting:  48%|████▊     | 554/1158 [00:12<00:11, 53.86batch/s]Predicting:  48%|████▊     | 561/1158 [00:12<00:10, 55.46batch/s]Predicting:  49%|████▉     | 567/1158 [00:12<00:10, 56.70batch/s]Predicting:  49%|████▉     | 573/1158 [00:12<00:10, 57.39batch/s]Predicting:  50%|█████     | 579/1158 [00:12<00:10, 57.15batch/s]Predicting:  51%|█████     | 585/1158 [00:12<00:10, 57.23batch/s]Predicting:  51%|█████     | 591/1158 [00:13<00:10, 55.61batch/s]Predicting:  52%|█████▏    | 597/1158 [00:13<00:10, 55.83batch/s]Predicting:  52%|█████▏    | 603/1158 [00:13<00:10, 54.76batch/s]Predicting:  53%|█████▎    | 609/1158 [00:13<00:10, 54.89batch/s]Predicting:  53%|█████▎    | 615/1158 [00:13<00:10, 52.34batch/s]Predicting:  54%|█████▎    | 621/1158 [00:13<00:10, 52.51batch/s]Predicting:  54%|█████▍    | 627/1158 [00:13<00:09, 53.65batch/s]Predicting:  55%|█████▍    | 633/1158 [00:13<00:09, 54.56batch/s]Predicting:  55%|█████▌    | 639/1158 [00:13<00:09, 55.39batch/s]Predicting:  56%|█████▌    | 645/1158 [00:14<00:09, 56.24batch/s]Predicting:  56%|█████▌    | 651/1158 [00:14<00:08, 56.85batch/s]Predicting:  57%|█████▋    | 658/1158 [00:14<00:08, 58.06batch/s]Predicting:  57%|█████▋    | 664/1158 [00:14<00:08, 58.49batch/s]Predicting:  58%|█████▊    | 670/1158 [00:14<00:08, 58.05batch/s]Predicting:  58%|█████▊    | 676/1158 [00:14<00:08, 58.22batch/s]Predicting:  59%|█████▉    | 682/1158 [00:14<00:08, 57.09batch/s]Predicting:  59%|█████▉    | 689/1158 [00:14<00:08, 58.28batch/s]Predicting:  60%|██████    | 695/1158 [00:14<00:08, 57.17batch/s]Predicting:  61%|██████    | 701/1158 [00:15<00:07, 57.45batch/s]Predicting:  61%|██████    | 707/1158 [00:15<00:07, 56.64batch/s]Predicting:  62%|██████▏   | 713/1158 [00:15<00:08, 52.95batch/s]Predicting:  62%|██████▏   | 720/1158 [00:15<00:07, 54.92batch/s]Predicting:  63%|██████▎   | 726/1158 [00:15<00:07, 56.19batch/s]Predicting:  63%|██████▎   | 732/1158 [00:15<00:07, 55.92batch/s]Predicting:  64%|██████▎   | 738/1158 [00:15<00:07, 56.30batch/s]Predicting:  64%|██████▍   | 744/1158 [00:15<00:07, 57.02batch/s]Predicting:  65%|██████▍   | 751/1158 [00:15<00:06, 58.37batch/s]Predicting:  65%|██████▌   | 757/1158 [00:16<00:07, 57.18batch/s]Predicting:  66%|██████▌   | 764/1158 [00:16<00:06, 58.74batch/s]Predicting:  67%|██████▋   | 771/1158 [00:16<00:06, 59.06batch/s]Predicting:  67%|██████▋   | 777/1158 [00:16<00:06, 58.97batch/s]Predicting:  68%|██████▊   | 784/1158 [00:16<00:06, 59.76batch/s]Predicting:  68%|██████▊   | 790/1158 [00:16<00:06, 59.40batch/s]Predicting:  69%|██████▊   | 796/1158 [00:16<00:06, 59.14batch/s]Predicting:  69%|██████▉   | 802/1158 [00:16<00:06, 57.54batch/s]Predicting:  70%|██████▉   | 808/1158 [00:16<00:06, 57.96batch/s]Predicting:  70%|███████   | 814/1158 [00:17<00:05, 57.97batch/s]Predicting:  71%|███████   | 820/1158 [00:17<00:05, 57.00batch/s]Predicting:  71%|███████▏  | 826/1158 [00:17<00:05, 57.18batch/s]Predicting:  72%|███████▏  | 832/1158 [00:17<00:05, 57.07batch/s]Predicting:  72%|███████▏  | 839/1158 [00:17<00:05, 58.66batch/s]Predicting:  73%|███████▎  | 845/1158 [00:17<00:05, 58.32batch/s]Predicting:  73%|███████▎  | 851/1158 [00:17<00:05, 58.06batch/s]Predicting:  74%|███████▍  | 858/1158 [00:17<00:05, 58.22batch/s]Predicting:  75%|███████▍  | 864/1158 [00:17<00:05, 58.38batch/s]Predicting:  75%|███████▌  | 870/1158 [00:17<00:05, 56.77batch/s]Predicting:  76%|███████▌  | 876/1158 [00:18<00:04, 56.77batch/s]Predicting:  76%|███████▌  | 882/1158 [00:18<00:04, 57.24batch/s]Predicting:  77%|███████▋  | 888/1158 [00:18<00:04, 56.75batch/s]Predicting:  77%|███████▋  | 894/1158 [00:18<00:04, 56.53batch/s]Predicting:  78%|███████▊  | 900/1158 [00:18<00:09, 27.70batch/s]Predicting:  78%|███████▊  | 907/1158 [00:19<00:07, 33.65batch/s]Predicting:  79%|███████▉  | 913/1158 [00:19<00:06, 38.25batch/s]Predicting:  79%|███████▉  | 919/1158 [00:19<00:05, 42.70batch/s]Predicting:  80%|███████▉  | 925/1158 [00:19<00:05, 46.52batch/s]Predicting:  80%|████████  | 932/1158 [00:19<00:04, 50.48batch/s]Predicting:  81%|████████  | 938/1158 [00:19<00:04, 52.54batch/s]Predicting:  82%|████████▏ | 944/1158 [00:19<00:03, 53.56batch/s]Predicting:  82%|████████▏ | 951/1158 [00:19<00:03, 55.45batch/s]Predicting:  83%|████████▎ | 957/1158 [00:19<00:03, 55.56batch/s]Predicting:  83%|████████▎ | 963/1158 [00:19<00:03, 55.68batch/s]Predicting:  84%|████████▎ | 969/1158 [00:20<00:03, 56.12batch/s]Predicting:  84%|████████▍ | 975/1158 [00:20<00:03, 57.06batch/s]Predicting:  85%|████████▍ | 981/1158 [00:20<00:03, 57.85batch/s]Predicting:  85%|████████▌ | 988/1158 [00:20<00:02, 58.75batch/s]Predicting:  86%|████████▌ | 994/1158 [00:20<00:02, 59.03batch/s]Predicting:  86%|████████▋ | 1000/1158 [00:20<00:02, 59.00batch/s]Predicting:  87%|████████▋ | 1007/1158 [00:20<00:02, 59.87batch/s]Predicting:  87%|████████▋ | 1013/1158 [00:20<00:02, 59.74batch/s]Predicting:  88%|████████▊ | 1020/1158 [00:20<00:02, 58.82batch/s]Predicting:  89%|████████▊ | 1026/1158 [00:21<00:02, 58.37batch/s]Predicting:  89%|████████▉ | 1032/1158 [00:21<00:02, 57.72batch/s]Predicting:  90%|████████▉ | 1038/1158 [00:21<00:02, 57.63batch/s]Predicting:  90%|█████████ | 1044/1158 [00:21<00:01, 58.15batch/s]Predicting:  91%|█████████ | 1051/1158 [00:21<00:01, 59.41batch/s]Predicting:  91%|█████████▏| 1057/1158 [00:21<00:01, 59.48batch/s]Predicting:  92%|█████████▏| 1063/1158 [00:21<00:01, 59.56batch/s]Predicting:  92%|█████████▏| 1069/1158 [00:21<00:01, 59.02batch/s]Predicting:  93%|█████████▎| 1076/1158 [00:21<00:01, 59.54batch/s]Predicting:  93%|█████████▎| 1082/1158 [00:21<00:01, 59.37batch/s]Predicting:  94%|█████████▍| 1088/1158 [00:22<00:01, 58.66batch/s]Predicting:  94%|█████████▍| 1094/1158 [00:22<00:01, 58.81batch/s]Predicting:  95%|█████████▌| 1101/1158 [00:22<00:00, 58.95batch/s]Predicting:  96%|█████████▌| 1107/1158 [00:22<00:00, 58.77batch/s]Predicting:  96%|█████████▌| 1113/1158 [00:22<00:00, 56.63batch/s]Predicting:  97%|█████████▋| 1119/1158 [00:22<00:00, 53.85batch/s]Predicting:  97%|█████████▋| 1125/1158 [00:22<00:00, 55.42batch/s]Predicting:  98%|█████████▊| 1132/1158 [00:22<00:00, 58.79batch/s]Predicting:  98%|█████████▊| 1139/1158 [00:22<00:00, 61.56batch/s]Predicting:  99%|█████████▉| 1146/1158 [00:23<00:00, 63.67batch/s]Predicting: 100%|█████████▉| 1153/1158 [00:23<00:00, 65.43batch/s]Predicting: 100%|██████████| 1158/1158 [00:23<00:00, 49.68batch/s]
+INFO:state._cli._tx._predict:Creating anndatas from predictions from manual loop...
+INFO:state._cli._tx._predict:Clipped adata_pred and adata_real X values to [0.0, 14.0] before evaluation.
+... storing 'gene' as categorical
+... storing 'cell_line' as categorical
+... storing 'gem_group' as categorical
+... storing 'ctrl_cell_barcode' as categorical
+... storing 'gene' as categorical
+... storing 'cell_line' as categorical
+... storing 'gem_group' as categorical
+... storing 'ctrl_cell_barcode' as categorical
+INFO:state._cli._tx._predict:Saved adata_pred to /work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/model_output/k562/DE_1_dir_1_p_05/eval_best.ckpt/adata_pred.h5ad
+INFO:state._cli._tx._predict:Saved adata_real to /work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/model_output/k562/DE_1_dir_1_p_05/eval_best.ckpt/adata_real.h5ad
+INFO:state._cli._tx._predict:Computing metrics using cell-eval...
+WARNING:cell_eval._evaluator:Output directory /work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/model_output/k562/DE_1_dir_1_p_05/eval_best.ckpt already exists, potential overwrite occurring
+INFO:cell_eval.utils:Data appears to be log1p normalized (decimals detected, range [0.00, 8.04])
+INFO:cell_eval._evaluator:Input is found to be log-normalized already - skipping transformation.
+INFO:cell_eval.utils:Data appears to be log1p normalized (decimals detected, range [0.00, 6.18])
+INFO:cell_eval._evaluator:Input is found to be log-normalized already - skipping transformation.
+INFO:cell_eval._evaluator:Computing DE for real data
+INFO:cell_eval._evaluator:Using the following pdex kwargs: {'exp_post_agg': True, 'is_log1p': True, 'reference': 'non-targeting', 'groupby_key': 'gene', 'num_workers': 56, 'batch_size': 2048, 'metric': 'wilcoxon', 'as_polars': True}
+INFO:pdex._single_cell:Log1p status: True
+INFO:pdex._single_cell:Precomputing masks for each target gene
+gem_group
+Identifying target masks:   0%|          | 0/408 [00:00<?, ?it/s]Identifying target masks: 100%|██████████| 408/408 [00:00<00:00, 14576.21it/s]
+INFO:pdex._single_cell:Precomputing variable indices for each feature
+Identifying variable indices:   0%|          | 0/2000 [00:00<?, ?it/s]Identifying variable indices: 100%|██████████| 2000/2000 [00:00<00:00, 3381139.86it/s]
+INFO:pdex._single_cell:Creating shared memory memory matrix for parallel computing
+INFO:pdex._single_cell:Creating generator of all combinations: N=816000
+INFO:pdex._single_cell:Creating generator of all batches: N=399
+INFO:pdex._single_cell:Initializing parallel processing pool
+INFO:pdex._single_cell:Processing batches
+Processing batches:   0%|          | 0/399 [00:00<?, ?it/s]Processing batches:   0%|          | 1/399 [00:21<2:24:14, 21.74s/it]Processing batches:   1%|          | 2/399 [00:22<1:02:41,  9.47s/it]Processing batches:   3%|▎         | 12/399 [00:22<06:41,  1.04s/it] Processing batches:  14%|█▍        | 57/399 [00:32<01:51,  3.06it/s]Processing batches:  15%|█▍        | 59/399 [00:37<02:31,  2.24it/s]Processing batches:  16%|█▋        | 65/399 [00:38<02:15,  2.46it/s]Processing batches:  17%|█▋        | 68/399 [00:38<02:01,  2.73it/s]Processing batches:  18%|█▊        | 70/399 [00:40<02:18,  2.37it/s]Processing batches:  18%|█▊        | 71/399 [00:43<03:09,  1.73it/s]Processing batches:  18%|█▊        | 72/399 [00:45<03:59,  1.37it/s]Processing batches:  20%|█▉        | 78/399 [00:51<04:29,  1.19it/s]Processing batches:  23%|██▎       | 90/399 [00:52<01:59,  2.58it/s]Processing batches:  23%|██▎       | 93/399 [00:53<02:08,  2.39it/s]Processing batches:  25%|██▍       | 98/399 [00:55<01:57,  2.57it/s]Processing batches:  26%|██▌       | 104/399 [00:56<01:38,  3.01it/s]Processing batches:  27%|██▋       | 109/399 [00:56<01:11,  4.05it/s]Processing batches:  28%|██▊       | 111/399 [00:57<01:19,  3.63it/s]Processing batches:  28%|██▊       | 113/399 [00:58<01:32,  3.09it/s]Processing batches:  29%|██▉       | 115/399 [01:03<03:24,  1.39it/s]Processing batches:  29%|██▉       | 116/399 [01:05<03:53,  1.21it/s]Processing batches:  30%|██▉       | 118/399 [01:05<03:04,  1.53it/s]Processing batches:  30%|██▉       | 119/399 [01:07<04:01,  1.16it/s]Processing batches:  30%|███       | 120/399 [01:10<05:47,  1.25s/it]Processing batches:  30%|███       | 121/399 [01:13<06:59,  1.51s/it]Processing batches:  31%|███▏      | 125/399 [01:13<03:41,  1.24it/s]Processing batches:  32%|███▏      | 127/399 [01:16<04:08,  1.10it/s]Processing batches:  32%|███▏      | 128/399 [01:17<04:25,  1.02it/s]Processing batches:  32%|███▏      | 129/399 [01:18<04:04,  1.11it/s]Processing batches:  33%|███▎      | 130/399 [01:18<03:25,  1.31it/s]Processing batches:  33%|███▎      | 131/399 [01:19<03:29,  1.28it/s]Processing batches:  34%|███▍      | 135/399 [01:21<02:53,  1.52it/s]Processing batches:  34%|███▍      | 137/399 [01:22<02:39,  1.64it/s]Processing batches:  35%|███▍      | 139/399 [01:23<02:35,  1.68it/s]Processing batches:  36%|███▌      | 142/399 [01:25<02:38,  1.62it/s]Processing batches:  38%|███▊      | 150/399 [01:27<01:44,  2.38it/s]Processing batches:  38%|███▊      | 153/399 [01:28<01:25,  2.89it/s]Processing batches:  39%|███▉      | 156/399 [01:28<01:05,  3.74it/s]Processing batches:  40%|███▉      | 159/399 [01:29<01:07,  3.56it/s]Processing batches:  40%|████      | 160/399 [01:30<01:45,  2.26it/s]Processing batches:  42%|████▏     | 167/399 [01:32<01:15,  3.06it/s]Processing batches:  43%|████▎     | 171/399 [01:36<01:58,  1.93it/s]Processing batches:  43%|████▎     | 172/399 [01:37<02:13,  1.69it/s]Processing batches:  43%|████▎     | 173/399 [01:39<02:41,  1.40it/s]Processing batches:  44%|████▍     | 175/399 [01:39<02:13,  1.68it/s]Processing batches:  44%|████▍     | 176/399 [01:42<03:20,  1.11it/s]Processing batches:  44%|████▍     | 177/399 [01:43<03:41,  1.00it/s]Processing batches:  45%|████▌     | 180/399 [01:49<04:51,  1.33s/it]Processing batches:  46%|████▌     | 184/399 [01:49<02:56,  1.22it/s]Processing batches:  46%|████▋     | 185/399 [01:51<03:29,  1.02it/s]Processing batches:  47%|████▋     | 188/399 [01:52<02:20,  1.50it/s]Processing batches:  48%|████▊     | 190/399 [01:53<02:13,  1.57it/s]Processing batches:  49%|████▉     | 195/399 [01:56<02:09,  1.57it/s]Processing batches:  49%|████▉     | 196/399 [01:59<02:59,  1.13it/s]Processing batches:  50%|█████     | 201/399 [01:59<01:42,  1.92it/s]Processing batches:  51%|█████     | 202/399 [02:01<02:04,  1.58it/s]Processing batches:  51%|█████▏    | 205/399 [02:01<01:28,  2.19it/s]Processing batches:  52%|█████▏    | 206/399 [02:02<01:37,  1.98it/s]Processing batches:  53%|█████▎    | 210/399 [02:03<01:16,  2.45it/s]Processing batches:  54%|█████▍    | 216/399 [02:05<01:05,  2.81it/s]Processing batches:  55%|█████▌    | 221/399 [02:06<00:55,  3.22it/s]Processing batches:  56%|█████▋    | 225/399 [02:06<00:43,  3.96it/s]Processing batches:  57%|█████▋    | 228/399 [02:10<01:19,  2.15it/s]Processing batches:  57%|█████▋    | 229/399 [02:12<01:50,  1.54it/s]Processing batches:  58%|█████▊    | 233/399 [02:14<01:32,  1.80it/s]Processing batches:  59%|█████▉    | 236/399 [02:15<01:22,  1.97it/s]Processing batches:  59%|█████▉    | 237/399 [02:15<01:23,  1.95it/s]Processing batches:  60%|█████▉    | 238/399 [02:18<02:22,  1.13it/s]Processing batches:  60%|█████▉    | 239/399 [02:19<02:22,  1.12it/s]Processing batches:  60%|██████    | 240/399 [02:20<02:14,  1.18it/s]Processing batches:  61%|██████    | 242/399 [02:21<02:00,  1.30it/s]Processing batches:  62%|██████▏   | 246/399 [02:21<01:01,  2.48it/s]Processing batches:  62%|██████▏   | 247/399 [02:23<01:17,  1.96it/s]Processing batches:  63%|██████▎   | 251/399 [02:23<00:48,  3.08it/s]Processing batches:  63%|██████▎   | 252/399 [02:25<01:29,  1.63it/s]Processing batches:  64%|██████▎   | 254/399 [02:28<02:00,  1.20it/s]Processing batches:  65%|██████▌   | 261/399 [02:29<00:56,  2.45it/s]Processing batches:  66%|██████▌   | 264/399 [02:31<01:03,  2.12it/s]Processing batches:  68%|██████▊   | 273/399 [02:32<00:37,  3.35it/s]Processing batches:  70%|███████   | 280/399 [02:33<00:28,  4.21it/s]Processing batches:  72%|███████▏  | 286/399 [02:36<00:34,  3.30it/s]Processing batches:  72%|███████▏  | 287/399 [02:36<00:33,  3.33it/s]Processing batches:  72%|███████▏  | 288/399 [02:40<01:07,  1.65it/s]Processing batches:  73%|███████▎  | 293/399 [02:40<00:41,  2.54it/s]Processing batches:  74%|███████▎  | 294/399 [02:45<01:30,  1.16it/s]Processing batches:  76%|███████▌  | 302/399 [02:45<00:40,  2.39it/s]Processing batches:  76%|███████▌  | 304/399 [02:47<00:44,  2.16it/s]Processing batches:  77%|███████▋  | 306/399 [02:47<00:36,  2.52it/s]Processing batches:  77%|███████▋  | 307/399 [02:48<00:47,  1.96it/s]Processing batches:  77%|███████▋  | 309/399 [02:53<01:23,  1.08it/s]Processing batches:  78%|███████▊  | 311/399 [02:53<01:02,  1.40it/s]Processing batches:  78%|███████▊  | 313/399 [02:54<00:59,  1.44it/s]Processing batches:  79%|███████▉  | 315/399 [02:57<01:17,  1.08it/s]Processing batches:  80%|███████▉  | 319/399 [02:58<00:51,  1.54it/s]Processing batches:  80%|████████  | 320/399 [02:59<00:46,  1.69it/s]Processing batches:  81%|████████  | 323/399 [03:00<00:40,  1.86it/s]Processing batches:  81%|████████▏ | 325/399 [03:01<00:39,  1.88it/s]Processing batches:  84%|████████▎ | 334/399 [03:02<00:14,  4.40it/s]Processing batches:  85%|████████▍ | 338/399 [03:02<00:13,  4.57it/s]Processing batches:  85%|████████▍ | 339/399 [03:02<00:12,  4.68it/s]Processing batches:  85%|████████▌ | 341/399 [03:03<00:12,  4.55it/s]Processing batches:  86%|████████▌ | 342/399 [03:04<00:19,  2.88it/s]Processing batches:  86%|████████▌ | 343/399 [03:05<00:21,  2.64it/s]Processing batches:  86%|████████▋ | 345/399 [03:07<00:29,  1.80it/s]Processing batches:  87%|████████▋ | 347/399 [03:08<00:32,  1.58it/s]Processing batches:  87%|████████▋ | 348/399 [03:11<00:53,  1.05s/it]Processing batches:  88%|████████▊ | 350/399 [03:16<01:14,  1.53s/it]Processing batches:  89%|████████▉ | 355/399 [03:18<00:38,  1.13it/s]Processing batches:  90%|████████▉ | 358/399 [03:18<00:26,  1.55it/s]Processing batches:  90%|████████▉ | 359/399 [03:18<00:23,  1.69it/s]Processing batches:  90%|█████████ | 361/399 [03:20<00:23,  1.63it/s]Processing batches:  91%|█████████ | 363/399 [03:22<00:27,  1.29it/s]Processing batches:  92%|█████████▏| 366/399 [03:23<00:20,  1.61it/s]Processing batches:  92%|█████████▏| 367/399 [03:26<00:28,  1.11it/s]Processing batches:  92%|█████████▏| 369/399 [03:26<00:21,  1.42it/s]Processing batches:  93%|█████████▎| 370/399 [03:27<00:21,  1.34it/s]Processing batches:  93%|█████████▎| 371/399 [03:28<00:19,  1.44it/s]Processing batches:  93%|█████████▎| 372/399 [03:30<00:27,  1.01s/it]Processing batches:  94%|█████████▍| 376/399 [03:31<00:12,  1.77it/s]Processing batches:  95%|█████████▌| 381/399 [03:32<00:06,  2.72it/s]Processing batches:  97%|█████████▋| 388/399 [03:32<00:02,  4.69it/s]Processing batches:  98%|█████████▊| 390/399 [03:32<00:01,  4.59it/s]Processing batches:  99%|█████████▉| 395/399 [03:33<00:00,  6.31it/s]Processing batches:  99%|█████████▉| 397/399 [03:33<00:00,  6.18it/s]Processing batches: 100%|██████████| 399/399 [03:33<00:00,  1.87it/s]
+INFO:pdex._single_cell:Flattening results
+INFO:pdex._single_cell:Closing shared memory pool
+INFO:cell_eval._evaluator:Writing real DE results to: k562_real_de.csv
+INFO:cell_eval._evaluator:Computing DE for pred data
+INFO:cell_eval._evaluator:Using the following pdex kwargs: {'exp_post_agg': True, 'is_log1p': True, 'reference': 'non-targeting', 'groupby_key': 'gene', 'num_workers': 56, 'batch_size': 2048, 'metric': 'wilcoxon', 'as_polars': True}
+INFO:pdex._single_cell:Log1p status: True
+INFO:pdex._single_cell:Precomputing masks for each target gene
+Identifying target masks:   0%|          | 0/408 [00:00<?, ?it/s]Identifying target masks: 100%|██████████| 408/408 [00:00<00:00, 4301.63it/s]
+INFO:pdex._single_cell:Precomputing variable indices for each feature
+Identifying variable indices:   0%|          | 0/2000 [00:00<?, ?it/s]Identifying variable indices: 100%|██████████| 2000/2000 [00:00<00:00, 140043.54it/s]
+INFO:pdex._single_cell:Creating shared memory memory matrix for parallel computing
+INFO:pdex._single_cell:Creating generator of all combinations: N=816000
+INFO:pdex._single_cell:Creating generator of all batches: N=399
+INFO:pdex._single_cell:Initializing parallel processing pool
+INFO:pdex._single_cell:Processing batches
+Processing batches:   0%|          | 0/399 [00:00<?, ?it/s]Processing batches:   0%|          | 1/399 [00:29<3:18:42, 29.96s/it]Processing batches:   1%|          | 2/399 [00:31<1:26:29, 13.07s/it]Processing batches:   2%|▏         | 6/399 [00:32<20:48,  3.18s/it]  Processing batches:   2%|▏         | 7/399 [00:32<17:00,  2.60s/it]Processing batches:   3%|▎         | 13/399 [00:32<05:58,  1.08it/s]Processing batches:   4%|▍         | 15/399 [00:33<04:47,  1.34it/s]Processing batches:   4%|▍         | 17/399 [00:33<04:05,  1.56it/s]Processing batches:   6%|▌         | 23/399 [00:35<02:52,  2.18it/s]Processing batches:   8%|▊         | 31/399 [00:35<01:29,  4.10it/s]Processing batches:   9%|▉         | 37/399 [00:36<01:12,  5.00it/s]Processing batches:  11%|█         | 43/399 [00:37<01:01,  5.76it/s]Processing batches:  14%|█▍        | 57/399 [00:44<01:58,  2.88it/s]Processing batches:  15%|█▍        | 58/399 [00:44<02:05,  2.72it/s]Processing batches:  15%|█▍        | 59/399 [00:53<05:11,  1.09it/s]Processing batches:  15%|█▌        | 60/399 [00:54<05:00,  1.13it/s]Processing batches:  16%|█▌        | 63/399 [00:54<04:02,  1.39it/s]Processing batches:  17%|█▋        | 69/399 [00:54<02:16,  2.42it/s]Processing batches:  18%|█▊        | 71/399 [00:55<02:03,  2.65it/s]Processing batches:  18%|█▊        | 73/399 [00:55<01:47,  3.02it/s]Processing batches:  22%|██▏       | 86/399 [00:55<00:38,  8.13it/s]Processing batches:  23%|██▎       | 92/399 [00:56<00:34,  8.80it/s]Processing batches:  28%|██▊       | 110/399 [00:58<00:32,  8.92it/s]Processing batches:  28%|██▊       | 113/399 [01:07<02:12,  2.16it/s]Processing batches:  29%|██▉       | 116/399 [01:10<02:29,  1.89it/s]Processing batches:  30%|██▉       | 118/399 [01:11<02:22,  1.98it/s]Processing batches:  30%|██▉       | 119/399 [01:11<02:15,  2.07it/s]Processing batches:  30%|███       | 120/399 [01:14<03:25,  1.36it/s]Processing batches:  30%|███       | 121/399 [01:14<03:04,  1.51it/s]Processing batches:  31%|███       | 123/399 [01:16<03:14,  1.42it/s]Processing batches:  31%|███       | 124/399 [01:18<04:15,  1.08it/s]Processing batches:  33%|███▎      | 130/399 [01:19<02:22,  1.89it/s]Processing batches:  35%|███▌      | 140/399 [01:21<01:19,  3.24it/s]Processing batches:  35%|███▌      | 141/399 [01:22<01:36,  2.68it/s]Processing batches:  38%|███▊      | 150/399 [01:23<00:58,  4.29it/s]Processing batches:  39%|███▉      | 157/399 [01:23<00:38,  6.25it/s]Processing batches:  40%|████      | 161/399 [01:23<00:32,  7.33it/s]Processing batches:  41%|████      | 163/399 [01:24<00:37,  6.35it/s]Processing batches:  42%|████▏     | 169/399 [01:28<01:25,  2.70it/s]Processing batches:  43%|████▎     | 171/399 [01:29<01:28,  2.56it/s]Processing batches:  43%|████▎     | 173/399 [01:29<01:15,  2.98it/s]Processing batches:  44%|████▍     | 176/399 [01:34<02:33,  1.46it/s]Processing batches:  44%|████▍     | 177/399 [01:36<03:13,  1.14it/s]Processing batches:  45%|████▌     | 181/399 [01:37<02:05,  1.74it/s]Processing batches:  46%|████▌     | 182/399 [01:38<02:22,  1.53it/s]Processing batches:  46%|████▌     | 183/399 [01:38<02:07,  1.70it/s]Processing batches:  46%|████▌     | 184/399 [01:42<04:05,  1.14s/it]Processing batches:  46%|████▋     | 185/399 [01:42<03:20,  1.07it/s]Processing batches:  48%|████▊     | 190/399 [01:43<01:34,  2.21it/s]Processing batches:  48%|████▊     | 191/399 [01:44<02:00,  1.73it/s]Processing batches:  49%|████▊     | 194/399 [01:45<01:33,  2.20it/s]Processing batches:  49%|████▉     | 196/399 [01:45<01:30,  2.23it/s]Processing batches:  50%|████▉     | 199/399 [01:47<01:23,  2.40it/s]Processing batches:  51%|█████▏    | 205/399 [01:47<00:48,  4.01it/s]Processing batches:  52%|█████▏    | 208/399 [01:48<00:44,  4.29it/s]Processing batches:  52%|█████▏    | 209/399 [01:49<01:10,  2.68it/s]Processing batches:  54%|█████▍    | 215/399 [01:51<01:06,  2.78it/s]Processing batches:  55%|█████▌    | 220/399 [01:53<01:03,  2.83it/s]Processing batches:  57%|█████▋    | 227/399 [01:56<01:04,  2.65it/s]Processing batches:  57%|█████▋    | 228/399 [01:56<01:02,  2.73it/s]Processing batches:  58%|█████▊    | 230/399 [01:57<01:06,  2.56it/s]Processing batches:  58%|█████▊    | 231/399 [01:58<01:11,  2.35it/s]Processing batches:  58%|█████▊    | 232/399 [02:02<02:35,  1.07it/s]Processing batches:  58%|█████▊    | 233/399 [02:05<03:52,  1.40s/it]Processing batches:  59%|█████▉    | 235/399 [02:07<03:30,  1.28s/it]Processing batches:  60%|█████▉    | 238/399 [02:10<02:50,  1.06s/it]Processing batches:  60%|██████    | 240/399 [02:10<02:07,  1.25it/s]Processing batches:  60%|██████    | 241/399 [02:10<01:51,  1.42it/s]Processing batches:  61%|██████    | 242/399 [02:13<03:07,  1.20s/it]Processing batches:  61%|██████    | 243/399 [02:15<03:25,  1.32s/it]Processing batches:  61%|██████▏   | 245/399 [02:16<02:40,  1.04s/it]Processing batches:  62%|██████▏   | 249/399 [02:18<01:37,  1.54it/s]Processing batches:  64%|██████▎   | 254/399 [02:20<01:22,  1.75it/s]Processing batches:  64%|██████▍   | 257/399 [02:21<01:07,  2.09it/s]Processing batches:  65%|██████▌   | 260/399 [02:22<01:09,  1.99it/s]Processing batches:  67%|██████▋   | 266/399 [02:23<00:46,  2.84it/s]Processing batches:  67%|██████▋   | 268/399 [02:24<00:49,  2.64it/s]Processing batches:  69%|██████▉   | 277/399 [02:25<00:24,  4.95it/s]Processing batches:  70%|██████▉   | 279/399 [02:26<00:27,  4.33it/s]Processing batches:  70%|███████   | 280/399 [02:26<00:26,  4.42it/s]Processing batches:  70%|███████   | 281/399 [02:27<00:38,  3.03it/s]Processing batches:  71%|███████   | 282/399 [02:29<01:08,  1.72it/s]Processing batches:  71%|███████   | 284/399 [02:30<00:57,  2.00it/s]Processing batches:  71%|███████▏  | 285/399 [02:30<00:49,  2.31it/s]Processing batches:  72%|███████▏  | 286/399 [02:32<01:34,  1.19it/s]Processing batches:  72%|███████▏  | 287/399 [02:32<01:17,  1.44it/s]Processing batches:  72%|███████▏  | 288/399 [02:37<02:51,  1.55s/it]Processing batches:  72%|███████▏  | 289/399 [02:39<03:20,  1.82s/it]Processing batches:  73%|███████▎  | 290/399 [02:40<02:49,  1.55s/it]Processing batches:  73%|███████▎  | 292/399 [02:40<01:39,  1.08it/s]Processing batches:  73%|███████▎  | 293/399 [02:42<01:58,  1.12s/it]Processing batches:  74%|███████▎  | 294/399 [02:43<01:41,  1.03it/s]Processing batches:  74%|███████▍  | 296/399 [02:44<01:25,  1.21it/s]Processing batches:  74%|███████▍  | 297/399 [02:45<01:22,  1.24it/s]Processing batches:  75%|███████▍  | 299/399 [02:46<01:06,  1.50it/s]Processing batches:  75%|███████▌  | 300/399 [02:47<01:24,  1.17it/s]Processing batches:  75%|███████▌  | 301/399 [02:47<01:13,  1.33it/s]Processing batches:  76%|███████▌  | 303/399 [02:49<01:03,  1.51it/s]Processing batches:  77%|███████▋  | 306/399 [02:49<00:43,  2.15it/s]Processing batches:  78%|███████▊  | 310/399 [02:51<00:39,  2.27it/s]Processing batches:  78%|███████▊  | 313/399 [02:52<00:31,  2.71it/s]Processing batches:  80%|███████▉  | 318/399 [02:53<00:23,  3.43it/s]Processing batches:  80%|███████▉  | 319/399 [02:54<00:31,  2.58it/s]Processing batches:  80%|████████  | 321/399 [02:54<00:28,  2.73it/s]Processing batches:  81%|████████▏ | 325/399 [02:55<00:19,  3.84it/s]Processing batches:  82%|████████▏ | 327/399 [02:55<00:19,  3.60it/s]Processing batches:  82%|████████▏ | 328/399 [02:56<00:19,  3.67it/s]Processing batches:  83%|████████▎ | 330/399 [02:57<00:24,  2.78it/s]Processing batches:  83%|████████▎ | 332/399 [02:57<00:20,  3.29it/s]Processing batches:  84%|████████▍ | 335/399 [02:57<00:14,  4.28it/s]Processing batches:  84%|████████▍ | 336/399 [02:59<00:24,  2.62it/s]Processing batches:  84%|████████▍ | 337/399 [03:00<00:29,  2.13it/s]Processing batches:  85%|████████▍ | 338/399 [03:00<00:25,  2.35it/s]Processing batches:  85%|████████▍ | 339/399 [03:01<00:35,  1.70it/s]Processing batches:  86%|████████▌ | 342/399 [03:01<00:21,  2.69it/s]Processing batches:  86%|████████▌ | 344/399 [03:03<00:27,  2.01it/s]Processing batches:  86%|████████▋ | 345/399 [03:07<01:00,  1.11s/it]Processing batches:  87%|████████▋ | 346/399 [03:09<01:15,  1.43s/it]Processing batches:  87%|████████▋ | 349/399 [03:11<00:50,  1.01s/it]Processing batches:  88%|████████▊ | 352/399 [03:12<00:34,  1.38it/s]Processing batches:  89%|████████▉ | 356/399 [03:14<00:26,  1.61it/s]Processing batches:  89%|████████▉ | 357/399 [03:14<00:23,  1.80it/s]Processing batches:  90%|█████████ | 360/399 [03:15<00:18,  2.14it/s]Processing batches:  90%|█████████ | 361/399 [03:16<00:23,  1.64it/s]Processing batches:  91%|█████████▏| 365/399 [03:16<00:11,  2.91it/s]Processing batches:  92%|█████████▏| 367/399 [03:17<00:11,  2.73it/s]Processing batches:  93%|█████████▎| 371/399 [03:18<00:08,  3.49it/s]Processing batches:  94%|█████████▍| 375/399 [03:19<00:06,  3.94it/s]Processing batches:  95%|█████████▍| 379/399 [03:19<00:04,  4.90it/s]Processing batches:  95%|█████████▌| 380/399 [03:20<00:04,  4.23it/s]Processing batches:  95%|█████████▌| 381/399 [03:20<00:04,  4.21it/s]Processing batches:  97%|█████████▋| 388/399 [03:20<00:01,  7.54it/s]Processing batches:  98%|█████████▊| 390/399 [03:21<00:01,  6.23it/s]Processing batches:  98%|█████████▊| 391/399 [03:21<00:01,  6.21it/s]Processing batches:  98%|█████████▊| 393/399 [03:22<00:01,  3.57it/s]Processing batches: 100%|█████████▉| 398/399 [03:23<00:00,  4.23it/s]Processing batches: 100%|██████████| 399/399 [03:23<00:00,  1.96it/s]
+INFO:pdex._single_cell:Flattening results
+INFO:pdex._single_cell:Closing shared memory pool
+INFO:cell_eval._evaluator:Writing pred DE results to: k562_pred_de.csv
+INFO:cell_eval._types._de:Checking DE data integrity... (real)
+INFO:cell_eval._types._de:DE data integrity check complete. (real)
+INFO:cell_eval._types._de:Checking DE data integrity... (pred)
+INFO:cell_eval._types._de:DE data integrity check complete. (pred)
+INFO:cell_eval._pipeline._runner:Computing metric 'overlap_at_N'
+INFO:cell_eval._pipeline._runner:Computing metric 'overlap_at_50'
+INFO:cell_eval._pipeline._runner:Computing metric 'overlap_at_100'
+INFO:cell_eval._pipeline._runner:Computing metric 'overlap_at_200'
+INFO:cell_eval._pipeline._runner:Computing metric 'overlap_at_500'
+INFO:cell_eval._pipeline._runner:Computing metric 'precision_at_N'
+INFO:cell_eval._pipeline._runner:Computing metric 'precision_at_50'
+INFO:cell_eval._pipeline._runner:Computing metric 'precision_at_100'
+INFO:cell_eval._pipeline._runner:Computing metric 'precision_at_200'
+INFO:cell_eval._pipeline._runner:Computing metric 'precision_at_500'
+INFO:cell_eval._pipeline._runner:Computing metric 'de_spearman_sig'
+INFO:cell_eval._pipeline._runner:Computing metric 'de_direction_match'
+INFO:cell_eval._pipeline._runner:Computing metric 'de_spearman_lfc_sig'
+INFO:cell_eval._pipeline._runner:Computing metric 'de_sig_genes_recall'
+INFO:cell_eval._pipeline._runner:Computing metric 'de_nsig_counts'
+INFO:cell_eval._pipeline._runner:Computing metric 'pr_auc'
+INFO:cell_eval._pipeline._runner:Computing metric 'roc_auc'
+INFO:cell_eval._pipeline._runner:Computing metric 'pearson_delta'
+INFO:cell_eval._types._anndata:Building pseudobulk embeddings for real anndata on: .X
+INFO:cell_eval._types._anndata:Building pseudobulk embeddings for predicted anndata on: .X
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...:  27%|██▋       | 110/407 [00:00<00:00, 1097.36it/s]Iterating over perturbations...:  54%|█████▍    | 220/407 [00:00<00:00, 1088.65it/s]Iterating over perturbations...:  93%|█████████▎| 378/407 [00:00<00:00, 1308.83it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 1269.42it/s]
+INFO:cell_eval._pipeline._runner:Computing metric 'mse'
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...:  45%|████▌     | 185/407 [00:00<00:00, 1846.00it/s]Iterating over perturbations...:  91%|█████████▏| 372/407 [00:00<00:00, 1858.54it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 1817.75it/s]
+INFO:cell_eval._pipeline._runner:Computing metric 'mae'
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...:  48%|████▊     | 195/407 [00:00<00:00, 1942.44it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 2110.86it/s]
+INFO:cell_eval._pipeline._runner:Computing metric 'mse_delta'
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...:  68%|██████▊   | 275/407 [00:00<00:00, 2745.07it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 2405.33it/s]
+INFO:cell_eval._pipeline._runner:Computing metric 'mae_delta'
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...:  57%|█████▋    | 232/407 [00:00<00:00, 2319.79it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 2266.13it/s]
+INFO:cell_eval._pipeline._runner:Computing metric 'discrimination_score_l1'
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 25924.19it/s]
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 20101.76it/s]
+INFO:cell_eval._pipeline._runner:Computing metric 'discrimination_score_l2'
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 36432.51it/s]
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 38083.25it/s]
+INFO:cell_eval._pipeline._runner:Computing metric 'discrimination_score_cosine'
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 19747.61it/s]
+Iterating over perturbations...:   0%|          | 0/407 [00:00<?, ?it/s]Iterating over perturbations...: 100%|██████████| 407/407 [00:00<00:00, 21567.41it/s]
+INFO:cell_eval._evaluator:Writing perturbation level metrics to /work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/model_output/k562/DE_1_dir_1_p_05/eval_best.ckpt/k562_results.csv
+INFO:cell_eval._evaluator:Writing aggregate metrics to /work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/model_output/k562/DE_1_dir_1_p_05/eval_best.ckpt/k562_agg_results.csv

@@ -1,0 +1,22 @@
+========== Experiment Configuration ==========
+Config Name:  0.5_2
+Stage:        train
+GPU ID:       3
+Weights:      S=1, M=0.5, C=2
+Test dataset: CELL=k562
+Stdout path:  INFO_LOG=/work/home/cryoem666/czx/project/state_training_debug/experiment/ba_loss_01_13/scripts/output/k562/train/0.5_2/info_01_23_21_11_16.log
+Stderr path:  ERR_LOG=/work/home/cryoem666/czx/project/state_training_debug/experiment/ba_loss_01_13/scripts/output/k562/train/0.5_2/error_01_23_21_11_16.log
+==============================================
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 136, in <module>
+    main()
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 120, in main
+    run_tx_train(cfg)
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/_cli/_tx/_train.py", line 44, in run_tx_train
+    run_output_dir = join(cfg["output_dir"], cfg["name"])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 90, in join
+  File "<frozen genericpath>", line 164, in _check_arg_types
+TypeError: join() argument must be str, bytes, or os.PathLike object, not 'float'

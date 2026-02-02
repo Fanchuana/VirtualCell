@@ -1,0 +1,24 @@
+========== Experiment Configuration ==========
+Config Name:  freeze0_vaeloss1
+Stage:        test
+GPU ID:       1
+MAIN_LOSS:    energy
+VAE_LOSS:     True
+VAE_FREEZE:   False
+Test dataset: CELL=hepg2
+Stdout path:  INFO_LOG=/work/home/cryoem666/czx/project/state_training_debug/experiment/vae_01_13/scripts/output/hepg2/test/freeze0_vaeloss1/info_01_17_21_17_58.log
+Stderr path:  ERR_LOG=/work/home/cryoem666/czx/project/state_training_debug/experiment/vae_01_13/scripts/output/hepg2/test/freeze0_vaeloss1/error_01_17_21_17_58.log
+==============================================
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 136, in <module>
+    main()
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 123, in main
+    run_tx_predict(args)
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/_cli/_tx/_predict.py", line 142, in run_tx_predict
+    cfg = load_config(config_path)
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/_cli/_tx/_predict.py", line 124, in load_config
+    raise FileNotFoundError(f"Could not find config file: {cfg_path}")
+FileNotFoundError: Could not find config file: /work/home/cryoem666/czx/project/state_training_debug/experiment/vae_01_13/model_output/hepg2/freeze0_vaeloss1/config.yaml

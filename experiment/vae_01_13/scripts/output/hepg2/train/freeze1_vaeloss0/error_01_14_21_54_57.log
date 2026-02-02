@@ -1,0 +1,76 @@
+Seed set to 42
+Processing replogle_proper:   0%|          | 0/1 [00:00<?, ?it/s]No cell barcode information found in /work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad. Generating generic barcodes.
+                                                                 Processing replogle_proper:   0%|          | 0/1 [00:19<?, ?it/s]Processing replogle_proper: 100%|██████████| 1/1 [00:19<00:00, 19.50s/it]Processing replogle_proper: 100%|██████████| 1/1 [00:19<00:00, 19.50s/it]
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [5]
+
+   | Name                   | Type                | Params | Mode 
+------------------------------------------------------------------------
+0  | loss_fn                | MSELoss             | 0      | train
+1  | gene_decoder           | LatentToGeneDecoder | 4.7 M  | train
+2  | main_loss_fn           | SamplesLoss         | 0      | train
+3  | vae                    | VAE                 | 8.6 M  | eval 
+4  | vae_encoder            | Encoder             | 4.3 M  | eval 
+5  | vae2transf_dim_encoder | Sequential          | 16.5 K | train
+6  | pert_encoder           | Sequential          | 259 K  | train
+7  | transformer_backbone   | LlamaModel          | 15.5 M | train
+8  | vae_decoder            | Decoder             | 4.3 M  | eval 
+9  | transf2vae_dim_decoder | Sequential          | 16.5 K | train
+10 | project_out            | Sequential          | 16.5 K | train
+11 | batch_encoder          | Embedding           | 7.2 K  | train
+12 | relu                   | ReLU                | 0      | train
+------------------------------------------------------------------------
+16.4 M    Trainable params
+12.7 M    Non-trainable params
+29.0 M    Total params
+116.180   Total estimated model params size (MB)
+137       Modules in train mode
+37        Modules in eval mode
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 136, in <module>
+    main()
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 120, in main
+    run_tx_train(cfg)
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/_cli/_tx/_train.py", line 398, in run_tx_train
+    trainer.fit(
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 560, in fit
+    call._call_and_handle_interrupt(
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 598, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1011, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1055, in _run_stage
+    self.fit_loop.run()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 216, in run
+    self.advance()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 458, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 153, in run
+    self.on_advance_end(data_fetcher)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 398, in on_advance_end
+    self.val_loop.run()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/utilities.py", line 179, in _decorator
+    return loop_run(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/evaluation_loop.py", line 152, in run
+    return self.on_run_end()
+           ^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/evaluation_loop.py", line 309, in on_run_end
+    self._on_evaluation_end()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/evaluation_loop.py", line 354, in _on_evaluation_end
+    call._call_callback_hooks(trainer, hook_name, *args, **kwargs)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 228, in _call_callback_hooks
+    fn(trainer, trainer.lightning_module, *args, **kwargs)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/callbacks/model_checkpoint.py", line 391, in on_validation_end
+    self._save_topk_checkpoint(trainer, monitor_candidates)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/callbacks/model_checkpoint.py", line 466, in _save_topk_checkpoint
+    raise MisconfigurationException(m)
+lightning.fabric.utilities.exceptions.MisconfigurationException: `ModelCheckpoint(monitor='val_loss')` could not find the monitored key in the returned metrics: ['train_main_loss', 'batches_per_second', 'batch_time_min', 'batch_time_max', 'batch_time_avg', 'batch_time_cv_percent', 'batch_time_max_min_ratio', 'val_main_loss', 'epoch', 'step']. HINT: Did you call `log('val_loss', value)` in the `LightningModule`?

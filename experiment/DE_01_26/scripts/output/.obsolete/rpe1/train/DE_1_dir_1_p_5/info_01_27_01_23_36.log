@@ -1,0 +1,256 @@
+========== Experiment Configuration ==========
+Config Name:              DE_1_dir_1_p_5
+Stage:                    train
+GPU ID:                   3
+DE_DECODER:               True
+DE_LOSS_WEIGHT:           1
+DIR_DECODER:              True
+DIR_LOSS_WEIGHT:          1
+P_THRESHOLD:              0.5
+Test dataset: CELL=rpe1
+Stdout path:  INFO_LOG=/work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/scripts/output/rpe1/train/DE_1_dir_1_p_5/info_01_27_01_23_36.log
+Stderr path:  ERR_LOG=/work/home/cryoem666/czx/project/state_training_debug/experiment/DE_01_26/scripts/output/rpe1/train/DE_1_dir_1_p_5/error_01_27_01_23_36.log
+==============================================
+Seed set to 42
+/work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad
+replogle_proper rpe1 {'val': 104, 'test': 624}
+Processing replogle_proper:   0%|          | 0/1 [00:00<?, ?it/s]No cell barcode information found in /work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad. Generating generic barcodes.
+                                                                 Processing replogle_proper:   0%|          | 0/1 [00:05<?, ?it/s]Processing replogle_proper: 100%|██████████| 1/1 [00:05<00:00,  5.61s/it]Processing replogle_proper: 100%|██████████| 1/1 [00:05<00:00,  5.61s/it]
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [3]
+
+   | Name                   | Type                | Params | Mode 
+------------------------------------------------------------------------
+0  | loss_fn                | MSELoss             | 0      | train
+1  | gene_decoder           | LatentToGeneDecoder | 4.7 M  | train
+2  | main_loss_fn           | SamplesLoss         | 0      | train
+3  | vae_latent_loss_fn     | SamplesLoss         | 0      | train
+4  | DE_loss_fn             | BCEWithLogitsLoss   | 0      | train
+5  | direction_loss_fn      | BCEWithLogitsLoss   | 0      | train
+6  | vae                    | VAE                 | 8.6 M  | train
+7  | vae_encoder            | Encoder             | 4.3 M  | train
+8  | vae2transf_dim_encoder | Sequential          | 16.5 K | train
+9  | pert_encoder           | Sequential          | 259 K  | train
+10 | transformer_backbone   | LlamaModel          | 15.5 M | train
+11 | vae_decoder            | Decoder             | 4.3 M  | train
+12 | transf2vae_dim_decoder | Sequential          | 16.5 K | train
+13 | DE_decoder             | MultiLabelModelBase | 1.2 M  | train
+14 | direction_decoder      | MultiLabelModelBase | 1.2 M  | train
+15 | project_out            | Sequential          | 16.5 K | train
+16 | batch_encoder          | Embedding           | 7.2 K  | train
+17 | relu                   | ReLU                | 0      | train
+------------------------------------------------------------------------
+27.4 M    Trainable params
+4.1 M     Non-trainable params
+31.5 M    Total params
+126.093   Total estimated model params size (MB)
+193       Modules in train mode
+0         Modules in eval mode
+Processed replogle: 587324 train, 20945 val, 58114 test
+num_workers: 16
+batch size: None
+Loading pretrained VAE...
+Pretrained VAE loaded!
+is_gene_space: True
+VAETransitionPerturbationModel(
+  (loss_fn): MSELoss()
+  (gene_decoder): LatentToGeneDecoder(
+    (decoder): Sequential(
+      (0): Linear(in_features=2000, out_features=1024, bias=True)
+      (1): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+      (2): GELU(approximate='none')
+      (3): Dropout(p=0.1, inplace=False)
+      (4): Linear(in_features=1024, out_features=1024, bias=True)
+      (5): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+      (6): GELU(approximate='none')
+      (7): Dropout(p=0.1, inplace=False)
+      (8): Linear(in_features=1024, out_features=512, bias=True)
+      (9): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      (10): GELU(approximate='none')
+      (11): Dropout(p=0.1, inplace=False)
+      (12): Linear(in_features=512, out_features=2000, bias=True)
+      (13): ReLU()
+    )
+  )
+  (main_loss_fn): SamplesLoss()
+  (vae_latent_loss_fn): SamplesLoss()
+  (DE_loss_fn): BCEWithLogitsLoss()
+  (direction_loss_fn): BCEWithLogitsLoss()
+  (vae): VAE(
+    (encoder): Encoder(
+      (network): ModuleList(
+        (0): Sequential(
+          (0): Dropout(p=0.0, inplace=False)
+          (1): Linear(in_features=2000, out_features=1024, bias=True)
+          (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (3): PReLU(num_parameters=1)
+        )
+        (1-2): 2 x Sequential(
+          (0): Dropout(p=0.0, inplace=False)
+          (1): Linear(in_features=1024, out_features=1024, bias=True)
+          (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (3): PReLU(num_parameters=1)
+        )
+        (3): Linear(in_features=1024, out_features=128, bias=True)
+      )
+    )
+    (decoder): Decoder(
+      (network): ModuleList(
+        (0): Sequential(
+          (0): Linear(in_features=128, out_features=1024, bias=True)
+          (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): PReLU(num_parameters=1)
+        )
+        (1-2): 2 x Sequential(
+          (0): Dropout(p=0.0, inplace=False)
+          (1): Linear(in_features=1024, out_features=1024, bias=True)
+          (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (3): PReLU(num_parameters=1)
+        )
+        (3): Linear(in_features=1024, out_features=2000, bias=True)
+      )
+    )
+    (loss_autoencoder): MSELoss()
+  )
+  (vae_encoder): Encoder(
+    (network): ModuleList(
+      (0): Sequential(
+        (0): Dropout(p=0.0, inplace=False)
+        (1): Linear(in_features=2000, out_features=1024, bias=True)
+        (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): PReLU(num_parameters=1)
+      )
+      (1-2): 2 x Sequential(
+        (0): Dropout(p=0.0, inplace=False)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+        (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): PReLU(num_parameters=1)
+      )
+      (3): Linear(in_features=1024, out_features=128, bias=True)
+    )
+  )
+  (vae2transf_dim_encoder): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+  )
+  (pert_encoder): Sequential(
+    (0): Linear(in_features=2024, out_features=128, bias=True)
+  )
+  (transformer_backbone): LlamaModel(
+    (embed_tokens): Embedding(32000, 128, padding_idx=0)
+    (layers): ModuleList(
+      (0-7): 8 x LlamaDecoderLayer(
+        (self_attn): LlamaAttention(
+          (q_proj): Linear(in_features=128, out_features=696, bias=False)
+          (k_proj): Linear(in_features=128, out_features=696, bias=False)
+          (v_proj): Linear(in_features=128, out_features=696, bias=False)
+          (o_proj): Linear(in_features=696, out_features=128, bias=False)
+        )
+        (mlp): LlamaMLP(
+          (gate_proj): Linear(in_features=128, out_features=2784, bias=False)
+          (up_proj): Linear(in_features=128, out_features=2784, bias=False)
+          (down_proj): Linear(in_features=2784, out_features=128, bias=False)
+          (act_fn): SiLU()
+        )
+        (input_layernorm): LlamaRMSNorm((128,), eps=1e-06)
+        (post_attention_layernorm): LlamaRMSNorm((128,), eps=1e-06)
+      )
+    )
+    (norm): LlamaRMSNorm((128,), eps=1e-06)
+    (rotary_emb): LlamaRotaryEmbedding()
+  )
+  (vae_decoder): Decoder(
+    (network): ModuleList(
+      (0): Sequential(
+        (0): Linear(in_features=128, out_features=1024, bias=True)
+        (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): PReLU(num_parameters=1)
+      )
+      (1-2): 2 x Sequential(
+        (0): Dropout(p=0.0, inplace=False)
+        (1): Linear(in_features=1024, out_features=1024, bias=True)
+        (2): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): PReLU(num_parameters=1)
+      )
+      (3): Linear(in_features=1024, out_features=2000, bias=True)
+    )
+  )
+  (transf2vae_dim_decoder): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+  )
+  (DE_decoder): MultiLabelModelBase(
+    (ffn): FeedForward(
+      (fc1): Linear(in_features=128, out_features=2560, bias=False)
+      (fc2): Linear(in_features=2560, out_features=128, bias=False)
+      (fc3): Linear(in_features=128, out_features=2560, bias=False)
+    )
+    (ffn_norm): RMSNorm()
+    (dropout): Dropout(p=0.5, inplace=False)
+    (final_layer): Linear(in_features=128, out_features=2000, bias=False)
+  )
+  (direction_decoder): MultiLabelModelBase(
+    (ffn): FeedForward(
+      (fc1): Linear(in_features=128, out_features=2560, bias=False)
+      (fc2): Linear(in_features=2560, out_features=128, bias=False)
+      (fc3): Linear(in_features=128, out_features=2560, bias=False)
+    )
+    (ffn_norm): RMSNorm()
+    (dropout): Dropout(p=0.5, inplace=False)
+    (final_layer): Linear(in_features=128, out_features=2000, bias=False)
+  )
+  (project_out): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+  )
+  (batch_encoder): Embedding(56, 128)
+  (relu): ReLU()
+)
+Model created. Estimated params size: 0.12 GB
+Building trainer with kwargs: {'accelerator': 'gpu', 'devices': 1, 'strategy': 'auto', 'max_steps': 80000, 'check_val_every_n_epoch': None, 'val_check_interval': 2000, 'logger': [<state.tx.utils.RobustCSVLogger object at 0x7f09d869cc20>], 'plugins': [], 'callbacks': [<lightning.pytorch.callbacks.model_checkpoint.ModelCheckpoint object at 0x7f09d8931c70>, <state.tx.callbacks.batch_speed_monitor.BatchSpeedMonitorCallback object at 0x7f09d860ab10>], 'gradient_clip_val': 10, 'accumulate_grad_batches': 1, 'use_distributed_sampler': False}
+Trainer built successfully
+Model device: cpu
+CUDA memory allocated: 0.00 GB
+CUDA memory reserved: 0.04 GB
+About to call trainer.fit() with checkpoint_path=None
+Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 136, in <module>
+    main()
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 120, in main
+    run_tx_train(cfg)
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/_cli/_tx/_train.py", line 398, in run_tx_train
+    trainer.fit(
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 560, in fit
+    call._call_and_handle_interrupt(
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 598, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1011, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1053, in _run_stage
+    self._run_sanity_check()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1082, in _run_sanity_check
+    val_loop.run()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/utilities.py", line 179, in _decorator
+    return loop_run(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/evaluation_loop.py", line 145, in run
+    self._evaluation_step(batch, batch_idx, dataloader_idx, dataloader_iter)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/evaluation_loop.py", line 437, in _evaluation_step
+    output = call._call_strategy_hook(trainer, hook_name, *step_args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 329, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 412, in validation_step
+    return self.lightning_module.validation_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/tx/models/vae_transition.py", line 1074, in validation_step
+    return {"loss": loss, "predictions": pred}
+                                         ^^^^
+NameError: name 'pred' is not defined
+                                                                   

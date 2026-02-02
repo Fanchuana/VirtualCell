@@ -1,0 +1,102 @@
+Job started on Tue Jan 13 18:33:14 CST 2026
+Running Config: 0.3_0.7 | Weights: S=1, M=0.3, C=0.7
+/work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad
+replogle_proper jurkat {'val': 104, 'test': 624}
+Processed replogle: 581664 train, 22454 val, 63321 test
+num_workers: 8
+batch size: None
+BA LOSS BUILT: True
+OurStateTransitionPerturbationModel(
+  (loss_fn): BioAlignedLoss(
+    (sinkhorn_loss): SamplesLoss()
+  )
+  (gene_decoder): LatentToGeneDecoder(
+    (decoder): Sequential(
+      (0): Linear(in_features=6642, out_features=1024, bias=True)
+      (1): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+      (2): GELU(approximate='none')
+      (3): Dropout(p=0.1, inplace=False)
+      (4): Linear(in_features=1024, out_features=1024, bias=True)
+      (5): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+      (6): GELU(approximate='none')
+      (7): Dropout(p=0.1, inplace=False)
+      (8): Linear(in_features=1024, out_features=512, bias=True)
+      (9): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      (10): GELU(approximate='none')
+      (11): Dropout(p=0.1, inplace=False)
+      (12): Linear(in_features=512, out_features=2000, bias=True)
+      (13): ReLU()
+    )
+  )
+  (pert_encoder): Sequential(
+    (0): Linear(in_features=2024, out_features=128, bias=True)
+  )
+  (basal_encoder): Sequential(
+    (0): Linear(in_features=6642, out_features=128, bias=True)
+  )
+  (transformer_backbone): LlamaModel(
+    (embed_tokens): Embedding(32000, 128, padding_idx=0)
+    (layers): ModuleList(
+      (0-7): 8 x LlamaDecoderLayer(
+        (self_attn): LlamaAttention(
+          (q_proj): Linear(in_features=128, out_features=696, bias=False)
+          (k_proj): Linear(in_features=128, out_features=696, bias=False)
+          (v_proj): Linear(in_features=128, out_features=696, bias=False)
+          (o_proj): Linear(in_features=696, out_features=128, bias=False)
+        )
+        (mlp): LlamaMLP(
+          (gate_proj): Linear(in_features=128, out_features=2784, bias=False)
+          (up_proj): Linear(in_features=128, out_features=2784, bias=False)
+          (down_proj): Linear(in_features=2784, out_features=128, bias=False)
+          (act_fn): SiLU()
+        )
+        (input_layernorm): LlamaRMSNorm((128,), eps=1e-06)
+        (post_attention_layernorm): LlamaRMSNorm((128,), eps=1e-06)
+      )
+    )
+    (norm): LlamaRMSNorm((128,), eps=1e-06)
+    (rotary_emb): LlamaRotaryEmbedding()
+  )
+  (project_out): Sequential(
+    (0): Linear(in_features=128, out_features=6642, bias=True)
+  )
+  (batch_encoder): Embedding(56, 128)
+  (relu): ReLU()
+)
+Model created. Estimated params size: 0.10 GB
+Building trainer with kwargs: {'accelerator': 'gpu', 'devices': 1, 'strategy': 'auto', 'max_steps': 80000, 'check_val_every_n_epoch': None, 'val_check_interval': 2000, 'logger': [<state.tx.utils.RobustCSVLogger object at 0x7f74001bfb30>], 'plugins': [], 'callbacks': [<lightning.pytorch.callbacks.model_checkpoint.ModelCheckpoint object at 0x7f74003f27e0>, <state.tx.callbacks.batch_speed_monitor.BatchSpeedMonitorCallback object at 0x7f73df5b36b0>], 'gradient_clip_val': 10, 'accumulate_grad_batches': 1, 'use_distributed_sampler': False}
+Trainer built successfully
+Model device: cpu
+CUDA memory allocated: 0.00 GB
+CUDA memory reserved: 0.00 GB
+About to call trainer.fit() with checkpoint_path=None
+Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0:  50%|█████     | 1/2 [00:02<00:02,  0.39it/s]                                                                           JobId=141649 JobName=state_0.3_0.7
+   UserId=cryoem666(3036) GroupId=mrics(3002) MCS_label=N/A
+   Priority=4294765937 Nice=0 Account=(null) QOS=(null)
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:01:17 TimeLimit=10-00:00:00 TimeMin=N/A
+   SubmitTime=2026-01-13T18:33:07 EligibleTime=2026-01-13T18:33:07
+   AccrueTime=2026-01-13T18:33:07
+   StartTime=2026-01-13T18:33:08 EndTime=2026-01-23T18:33:08 Deadline=N/A
+   PreemptTime=None SuspendTime=None SecsPreSuspend=0
+   LastSchedEval=2026-01-13T18:33:08
+   Partition=8gpu AllocNode:Sid=login01:217602
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=g02n04
+   BatchHost=g02n04
+   NumNodes=1 NumCPUs=16 NumTasks=1 CPUs/Task=16 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=16,mem=256G,node=1,billing=16
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=16 MinMemoryNode=256G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/work/home/cryoem666/czx/project/state_training_debug/experiment/ba_loss_01_13/scripts/slurm_train_single.sh
+   WorkDir=/work/home/cryoem666
+   StdErr=/work/home/cryoem666/czx/project/state_training_debug/experiment/ba_loss_01_13/scripts/output/jurkat/train/0.3_0.7/01_13_18_33_slurm.err
+   StdIn=/dev/null
+   StdOut=/work/home/cryoem666/czx/project/state_training_debug/experiment/ba_loss_01_13/scripts/output/jurkat/train/0.3_0.7/01_13_18_33_slurm.out
+   Power=
+   TresPerNode=gpu:1
+
+Job finished on Tue Jan 13 18:34:25 CST 2026

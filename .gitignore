@@ -1,0 +1,12 @@
+.history/
+dataset/
+model_weights/
+*.ckpt
+*.pt
+*.h5ad
+*.pyc
+.DS_Store
+.idea
+.vscode
+__pycache__
+*.venv

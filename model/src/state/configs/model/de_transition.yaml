@@ -1,0 +1,91 @@
+name: vae_transition
+checkpoint: null
+device: cuda
+
+kwargs:
+  loss_kwargs:
+    main_loss_kwargs: 
+      use_main_loss: False
+      type: ba
+      sinkhorn_weight: 1
+      mean_weight: 1
+      cov_weight: 1
+      blur: 0.05
+    vae_loss_kwargs:
+      use_vae_loss: False
+      type: ba
+      weight: 1
+      sinkhorn_weight: 1
+      mean_weight: 1
+      cov_weight: 1
+      blur: 0.05
+    DE_loss_kwargs:
+      use_DE_loss: True
+      type: BCE
+      weight: 1
+    direction_loss_kwargs:
+      use_direction_loss: True
+      type: MSE
+      weight: 1
+    cons_loss_kwargs:
+      use_direction_loss: True
+      type: MSE
+      weight: 1
+  vae_kwargs:
+    model_path: /work/home/cryoem666/czx/project/state_training_debug/model_weight/vae/model_seed=0_step=199999.pt
+    freeze: False
+    hidden_dim: 128
+  extra_dataset_kwargs:
+    main_h5ad_path: /work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad
+    new_h5ad_path: /work/jpma/Mouse_fasting_project/deyu/chenzixi/replogle_deg.h5ad
+    DE_gt_output_path: null
+    DE_pred_output_path: null
+    p_val_threshold: 0.05
+  cell_set_len: 64
+  hidden_dim: 696      # hidden dimension going into the transformer backbone
+  confidence_head: False
+  n_encoder_layers: 1
+  n_decoder_layers: 1
+  predict_residual: True
+  softplus: True
+  freeze_pert_backbone: False
+  transformer_decoder: False
+  finetune_vci_decoder: False
+  residual_decoder: False
+  batch_encoder: False
+  use_batch_token: False
+  nb_decoder: False
+  mask_attn: False
+  use_effect_gating_token: False
+  distributional_loss: energy
+  init_from: null
+  transformer_backbone_key: llama
+  transformer_backbone_kwargs:
+      bidirectional_attention: false
+      max_position_embeddings: ${model.kwargs.cell_set_len}
+      hidden_size: ${model.kwargs.hidden_dim}
+      intermediate_size: 2784
+      num_hidden_layers: 8
+      num_attention_heads: 12
+      num_key_value_heads: 12
+      head_dim: 58
+      use_cache: false
+      attention_dropout: 0.0
+      hidden_dropout: 0.0
+      layer_norm_eps: 1e-6
+      pad_token_id: 0
+      bos_token_id: 1
+      eos_token_id: 2
+      tie_word_embeddings: false
+      rotary_dim: 0
+      use_rotary_embeddings: false
+  lora:
+      enable: false
+      r: 16
+      alpha: 32
+      dropout: 0.05
+      bias: none
+      target: auto
+      adapt_mlp: false
+      task_type: FEATURE_EXTRACTION
+      merge_on_eval: false

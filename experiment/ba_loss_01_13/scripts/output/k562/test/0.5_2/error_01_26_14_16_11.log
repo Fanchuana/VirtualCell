@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 136, in <module>
+    main()
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 123, in main
+    run_tx_predict(args)
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/_cli/_tx/_predict.py", line 142, in run_tx_predict
+    cfg = load_config(config_path)
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/_cli/_tx/_predict.py", line 124, in load_config
+    raise FileNotFoundError(f"Could not find config file: {cfg_path}")
+FileNotFoundError: Could not find config file: /work/home/cryoem666/czx/project/state_training_debug/experiment/ba_loss_01_13/model_output/k562/0.5_2/config.yaml

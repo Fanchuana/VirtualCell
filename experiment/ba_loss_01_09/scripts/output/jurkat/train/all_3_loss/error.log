@@ -1,0 +1,132 @@
+Seed set to 42
+Processing replogle_proper:   0%|          | 0/1 [00:00<?, ?it/s]No cell barcode information found in /work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad. Generating generic barcodes.
+                                                                 Processing replogle_proper:   0%|          | 0/1 [00:05<?, ?it/s]Processing replogle_proper: 100%|██████████| 1/1 [00:05<00:00,  5.39s/it]Processing replogle_proper: 100%|██████████| 1/1 [00:05<00:00,  5.39s/it]
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name                 | Type                | Params | Mode 
+---------------------------------------------------------------------
+0 | loss_fn              | BioAlignedLoss      | 0      | train
+1 | gene_decoder         | LatentToGeneDecoder | 9.4 M  | train
+2 | pert_encoder         | Sequential          | 259 K  | train
+3 | basal_encoder        | Sequential          | 850 K  | train
+4 | transformer_backbone | LlamaModel          | 15.5 M | train
+5 | project_out          | Sequential          | 856 K  | train
+6 | batch_encoder        | Embedding           | 7.2 K  | train
+7 | relu                 | ReLU                | 0      | train
+---------------------------------------------------------------------
+22.8 M    Trainable params
+4.1 M     Non-trainable params
+26.9 M    Total params
+107.532   Total estimated model params size (MB)
+135       Modules in train mode
+0         Modules in eval mode
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 136, in <module>
+    main()
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 120, in main
+    run_tx_train(cfg)
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/_cli/_tx/_train.py", line 398, in run_tx_train
+    trainer.fit(
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 560, in fit
+    call._call_and_handle_interrupt(
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 598, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1011, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1055, in _run_stage
+    self.fit_loop.run()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 216, in run
+    self.advance()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 458, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 152, in run
+    self.advance(data_fetcher)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 348, in advance
+    batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 192, in run
+    self._optimizer_step(batch_idx, closure)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 270, in _optimizer_step
+    call._call_lightning_module_hook(
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 177, in _call_lightning_module_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/core/module.py", line 1366, in optimizer_step
+    optimizer.step(closure=optimizer_closure)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/core/optimizer.py", line 154, in step
+    step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 239, in optimizer_step
+    return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/plugins/precision/precision.py", line 123, in optimizer_step
+    return optimizer.step(closure=closure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/torch/optim/optimizer.py", line 493, in wrapper
+    out = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/torch/optim/optimizer.py", line 91, in _use_grad
+    ret = func(self, *args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/torch/optim/adam.py", line 223, in step
+    loss = closure()
+           ^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/plugins/precision/precision.py", line 109, in _wrap_closure
+    closure_result = closure()
+                     ^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 146, in __call__
+    self._result = self.closure(*args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 131, in closure
+    step_output = self._step_fn()
+                  ^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 319, in _training_step
+    training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 329, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 391, in training_step
+    return self.lightning_module.training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/tx/models/our_state_transition.py", line 604, in training_step
+    self.log(
+TypeError: LightningModule.log() missing 1 required positional argument: 'value'
+Seed set to 42
+Processing replogle_proper:   0%|          | 0/1 [00:00<?, ?it/s]No cell barcode information found in /work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad. Generating generic barcodes.
+                                                                 Processing replogle_proper:   0%|          | 0/1 [00:05<?, ?it/s]Processing replogle_proper: 100%|██████████| 1/1 [00:05<00:00,  5.35s/it]Processing replogle_proper: 100%|██████████| 1/1 [00:05<00:00,  5.35s/it]
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name                 | Type                | Params | Mode 
+---------------------------------------------------------------------
+0 | loss_fn              | BioAlignedLoss      | 0      | train
+1 | gene_decoder         | LatentToGeneDecoder | 9.4 M  | train
+2 | pert_encoder         | Sequential          | 259 K  | train
+3 | basal_encoder        | Sequential          | 850 K  | train
+4 | transformer_backbone | LlamaModel          | 15.5 M | train
+5 | project_out          | Sequential          | 856 K  | train
+6 | batch_encoder        | Embedding           | 7.2 K  | train
+7 | relu                 | ReLU                | 0      | train
+---------------------------------------------------------------------
+22.8 M    Trainable params
+4.1 M     Non-trainable params
+26.9 M    Total params
+107.532   Total estimated model params size (MB)
+135       Modules in train mode
+0         Modules in eval mode
+`Trainer.fit` stopped: `max_steps=80000` reached.

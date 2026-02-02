@@ -1,0 +1,76 @@
+[rank: 0] Seed set to 42
+Processing replogle_proper:   0%|          | 0/1 [00:00<?, ?it/s]No cell barcode information found in /work/home/cryoem666/xyf/temp/pycharm/state/gene_perturnb_state/data/replogle.h5ad. Generating generic barcodes.
+                                                                 Processing replogle_proper:   0%|          | 0/1 [00:19<?, ?it/s]Processing replogle_proper: 100%|██████████| 1/1 [00:19<00:00, 19.92s/it]Processing replogle_proper: 100%|██████████| 1/1 [00:19<00:00, 19.92s/it]
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name                 | Type                | Params | Mode 
+---------------------------------------------------------------------
+0 | loss_fn              | BioAlignedLoss      | 0      | train
+1 | gene_decoder         | LatentToGeneDecoder | 9.4 M  | train
+2 | pert_encoder         | Sequential          | 259 K  | train
+3 | basal_encoder        | Sequential          | 850 K  | train
+4 | transformer_backbone | LlamaModel          | 15.5 M | train
+5 | project_out          | Sequential          | 856 K  | train
+6 | batch_encoder        | Embedding           | 7.2 K  | train
+7 | relu                 | ReLU                | 0      | train
+---------------------------------------------------------------------
+22.8 M    Trainable params
+4.1 M     Non-trainable params
+26.9 M    Total params
+107.532   Total estimated model params size (MB)
+135       Modules in train mode
+0         Modules in eval mode
+SLURM auto-requeueing enabled. Setting signal handlers.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 136, in <module>
+    main()
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/__main__.py", line 120, in main
+    run_tx_train(cfg)
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/_cli/_tx/_train.py", line 398, in run_tx_train
+    trainer.fit(
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 560, in fit
+    call._call_and_handle_interrupt(
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 598, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1011, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1053, in _run_stage
+    self._run_sanity_check()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1082, in _run_sanity_check
+    val_loop.run()
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/utilities.py", line 179, in _decorator
+    return loop_run(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/evaluation_loop.py", line 145, in run
+    self._evaluation_step(batch, batch_idx, dataloader_idx, dataloader_iter)
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/loops/evaluation_loop.py", line 437, in _evaluation_step
+    output = call._call_strategy_hook(trainer, hook_name, *step_args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 329, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 412, in validation_step
+    return self.lightning_module.validation_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/tx/models/our_state_transition.py", line 737, in validation_step
+    loss = self.loss_fn(pred, target).mean()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/miniconda3/envs/state_bk/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/home/cryoem666/czx/project/state_training_debug/model/src/state/tx/models/our_state_transition.py", line 63, in forward
+    cov_pred = torch.cov(pred[b].T)
+               ^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 170.00 MiB. GPU 0 has a total capacity of 31.73 GiB of which 27.87 GiB is free. Including non-PyTorch memory, this process has 3.85 GiB memory in use. Of the allocated memory 3.43 GiB is allocated by PyTorch, and 56.23 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
