@@ -9,4 +9,6 @@ model_weights/
 .idea
 .vscode
 __pycache__
+*.pyc
 *.venv
+
