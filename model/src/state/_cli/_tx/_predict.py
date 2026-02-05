@@ -24,6 +24,12 @@ def add_arguments_predict(parser: ap.ArgumentParser):
         default="last.ckpt",
         help="Checkpoint filename. Default is 'last.ckpt'. Relative to the output directory.",
     )
+    # [TODO] 是否输出 DE + direction
+    parser.add_argument(
+        "--output-DE",
+        action="store_true",
+        help="Whether to output DE + direction.",
+    )
 
     parser.add_argument(
         "--test-time-finetune",
@@ -324,22 +330,23 @@ def run_tx_predict(args: ap.ArgumentParser):
     # [TODO]
     # 预备写入DE_gt和DE_pred.csv
     # 定义表头: cell_line, pert_name, [genes...]
-    csv_header = ["cell_line", "pert_name"] + [str(g) for g in gene_names]
+    if args.output_DE:
+        csv_header = ["cell_line", "pert_name"] + [str(g) for g in gene_names]
 
-    f_de_pred = open(output_path_DE_pred, 'w', newline='')
-    f_de_gt = open(output_path_DE_gt, 'w', newline='')
-    f_direction_pred = open(output_path_direction_pred, 'w', newline='')
-    f_direction_gt = open(output_path_direction_gt, 'w', newline='')
-    
-    writer_de_pred = csv.writer(f_de_pred)
-    writer_de_gt = csv.writer(f_de_gt)
-    writer_direction_pred = csv.writer(f_direction_pred)
-    writer_direction_gt = csv.writer(f_direction_gt)
+        f_de_pred = open(output_path_DE_pred, 'w', newline='')
+        f_de_gt = open(output_path_DE_gt, 'w', newline='')
+        f_direction_pred = open(output_path_direction_pred, 'w', newline='')
+        f_direction_gt = open(output_path_direction_gt, 'w', newline='')
+        
+        writer_de_pred = csv.writer(f_de_pred)
+        writer_de_gt = csv.writer(f_de_gt)
+        writer_direction_pred = csv.writer(f_direction_pred)
+        writer_direction_gt = csv.writer(f_direction_gt)
 
-    writer_de_pred.writerow(csv_header)
-    writer_de_gt.writerow(csv_header)
-    writer_direction_pred.writerow(csv_header)
-    writer_direction_gt.writerow(csv_header)
+        writer_de_pred.writerow(csv_header)
+        writer_de_gt.writerow(csv_header)
+        writer_direction_pred.writerow(csv_header)
+        writer_direction_gt.writerow(csv_header)
 
     current_idx = 0
 
@@ -361,71 +368,72 @@ def run_tx_predict(args: ap.ArgumentParser):
             # Extract metadata and data directly from batch_preds
             # [TODO]
             # 提取并按细胞写入DE CSV
-            pert_names = batch_preds["pert_name"]
-            if not isinstance(pert_names, list):
-                pert_names = [pert_names]
-            
-            cell_type = batch_preds["celltype_name"]
-            if not isinstance(cell_type, list):
-                cell_type = [cell_type]
-
-            # 提取并处理 De Predictions de_probs
-            de_probs_raw = batch_preds["p_vals_pred"]
-            # 维度是 (N_cells, N_genes)
-            if de_probs_raw.ndim == 3 and de_probs_raw.size(0) == 1:
-                de_probs_raw = de_probs_raw.squeeze(0)
-            de_probs = de_probs_raw.cpu().numpy().astype(np.float32)
-
-            # 提取并处理 DE Ground Truth
-            de_gt_raw = batch_preds["p_vals_gt"]
-            if de_gt_raw.ndim == 3 and de_gt_raw.size(0) == 1:
-                de_gt_raw = de_gt_raw.squeeze(0)
-            de_gt = de_gt_raw.cpu().numpy().astype(np.float32)
-
-            # 提取并处理 direction logits
-            direction_logits_raw = batch_preds["direction_pred"]
-            # 维度是 (N_cells, N_genes)
-            if direction_logits_raw.ndim == 3 and direction_logits_raw.size(0) == 1:
-                direction_logits_raw = direction_logits_raw.squeeze(0)
-            direction_logits = direction_logits_raw.cpu().numpy().astype(np.float32)
-
-            # 提取并处理 DE Ground Truth
-            de_gt_raw = batch_preds["direction_gt"]
-            if de_gt_raw.ndim == 3 and de_gt_raw.size(0) == 1:
-                de_gt_raw = de_gt_raw.squeeze(0)
-            direction_gt = de_gt_raw.cpu().numpy().astype(np.float32)
-
-            # 构建行并写入
-            rows_de_pred = []
-            rows_de_gt = []
-            rows_direction_pred = []
-            rows_direction_gt = []
-            
-            for i in range(len(pert_names)):
-                # 构建每一行: [CellType, PertName, 0, 1, 0, ...]
-                # 注意: preds_binary[i] 是 numpy array, 需要转 list 才能与前面的 list 相加
-                common_meta = [cell_type[i], pert_names[i]]
+            if args.output_DE:
+                pert_names = batch_preds["pert_name"]
+                if not isinstance(pert_names, list):
+                    pert_names = [pert_names]
                 
-                # DE Prediction Row
-                row_de_pred = common_meta + de_probs[i].tolist()
-                rows_de_pred.append(row_de_pred)
-                
-                # DE Ground Truth Row
-                row_de_gt = common_meta + de_gt[i].tolist()
-                rows_de_gt.append(row_de_gt)
+                cell_type = batch_preds["celltype_name"]
+                if not isinstance(cell_type, list):
+                    cell_type = [cell_type]
 
-                # direction Prediction Row
-                row_direction_pred = common_meta + direction_logits[i].tolist()
-                rows_direction_pred.append(row_direction_pred)
+                # 提取并处理 De Predictions de_probs
+                de_probs_raw = batch_preds["p_vals_pred"]
+                # 维度是 (N_cells, N_genes)
+                if de_probs_raw.ndim == 3 and de_probs_raw.size(0) == 1:
+                    de_probs_raw = de_probs_raw.squeeze(0)
+                de_probs = de_probs_raw.cpu().numpy().astype(np.float32)
+
+                # 提取并处理 DE Ground Truth
+                de_gt_raw = batch_preds["p_vals_gt"]
+                if de_gt_raw.ndim == 3 and de_gt_raw.size(0) == 1:
+                    de_gt_raw = de_gt_raw.squeeze(0)
+                de_gt = de_gt_raw.cpu().numpy().astype(np.float32)
+
+                # 提取并处理 direction logits
+                direction_logits_raw = batch_preds["direction_pred"]
+                # 维度是 (N_cells, N_genes)
+                if direction_logits_raw.ndim == 3 and direction_logits_raw.size(0) == 1:
+                    direction_logits_raw = direction_logits_raw.squeeze(0)
+                direction_logits = direction_logits_raw.cpu().numpy().astype(np.float32)
+
+                # 提取并处理 DE Ground Truth
+                de_gt_raw = batch_preds["direction_gt"]
+                if de_gt_raw.ndim == 3 and de_gt_raw.size(0) == 1:
+                    de_gt_raw = de_gt_raw.squeeze(0)
+                direction_gt = de_gt_raw.cpu().numpy().astype(np.float32)
+
+                # 构建行并写入
+                rows_de_pred = []
+                rows_de_gt = []
+                rows_direction_pred = []
+                rows_direction_gt = []
                 
-                # direction Ground Truth Row
-                row_direction_gt = common_meta + direction_gt[i].tolist()
-                rows_direction_gt.append(row_direction_gt)
-            
-            writer_de_pred.writerows(rows_de_pred)
-            writer_de_gt.writerows(rows_de_gt)
-            writer_direction_pred.writerows(rows_direction_pred)
-            writer_direction_gt.writerows(rows_direction_gt)
+                for i in range(len(pert_names)):
+                    # 构建每一行: [CellType, PertName, 0, 1, 0, ...]
+                    # preds_binary[i] 是 numpy array, 需要转 list 才能与前面的 list 相加
+                    common_meta = [cell_type[i], pert_names[i]]
+                    
+                    # DE Prediction Row
+                    row_de_pred = common_meta + de_probs[i].tolist()
+                    rows_de_pred.append(row_de_pred)
+                    
+                    # DE Ground Truth Row
+                    row_de_gt = common_meta + de_gt[i].tolist()
+                    rows_de_gt.append(row_de_gt)
+
+                    # direction Prediction Row
+                    row_direction_pred = common_meta + direction_logits[i].tolist()
+                    rows_direction_pred.append(row_direction_pred)
+                    
+                    # direction Ground Truth Row
+                    row_direction_gt = common_meta + direction_gt[i].tolist()
+                    rows_direction_gt.append(row_direction_gt)
+                
+                writer_de_pred.writerows(rows_de_pred)
+                writer_de_gt.writerows(rows_de_gt)
+                writer_direction_pred.writerows(rows_direction_pred)
+                writer_direction_gt.writerows(rows_direction_gt)
 
             # Handle pert_name
             if isinstance(batch_preds["pert_name"], list):
@@ -526,11 +534,12 @@ def run_tx_predict(args: ap.ArgumentParser):
                 final_pert_cell_counts_preds[current_idx - batch_size : current_idx, :] = batch_gene_pred_np
 
     # [TODO]
-    f_de_pred.close()
-    f_de_gt.close()
-    f_direction_pred.close()
-    f_direction_gt.close()
-    logger.info("Finished writing DE_pred, DE_gt, direction_pred, direction_gt CSV.")
+    if args.output_DE:
+        f_de_pred.close()
+        f_de_gt.close()
+        f_direction_pred.close()
+        f_direction_gt.close()
+        logger.info("Finished writing DE_pred, DE_gt, direction_pred, direction_gt CSV.")
 
     logger.info("Creating anndatas from predictions from manual loop...")
 

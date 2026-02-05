@@ -20,19 +20,19 @@ kwargs:
       cov_weight: 1
       blur: 0.05
     DE_loss_kwargs:
-      use_DE_loss: True
+      use_DE_loss: False
       type: BCE
       weight: 1
     direction_loss_kwargs:
-      use_direction_loss: True
+      use_direction_loss: False
       type: MSE
       weight: 1
     cons_loss_kwargs:
-      use_cons_loss: True
+      use_cons_loss: False
       type: MSE
       weight: 0.1
   vae_kwargs:
-    model_path: /work/home/cryoem666/czx/project/state_training_debug/model_weight/vae/model_seed=0_step=199999.pt
+    model_path: /work/home/cryoem666/czx/project/state_training_debug/model_weight/new_dataset/state_fewshot_VAE_hepg2/model_seed=0_step=199999.pt
     freeze: False
     hidden_dim: 128
   extra_dataset_kwargs:

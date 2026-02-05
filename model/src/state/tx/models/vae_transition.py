@@ -794,7 +794,7 @@ class VAETransitionPerturbationModel(PerturbationModel):
                     ba_loss_dict = self.main_loss_fn.loss_dict
                     self.log_dict(
                         ba_loss_dict, 
-                        prog_bar=True,   # 进度条显示
+                        prog_bar=True,   
                         on_step=(stage == "train"),
                         on_epoch=(stage != "train")
                     )
@@ -802,7 +802,7 @@ class VAETransitionPerturbationModel(PerturbationModel):
                     self.log(
                         f"{stage}_main_loss", 
                         main_loss,
-                        prog_bar=True,   # 进度条显示
+                        prog_bar=True,
                         on_step=(stage == "train"),
                         on_epoch=(stage != "train")
                     )
@@ -1084,9 +1084,9 @@ class VAETransitionPerturbationModel(PerturbationModel):
         confidence_pred = pred_pack.confidence_pred
         # gene预测值与真实值
         # 需要注意的是, 我们的 cal_our_loss 读取的是打包好的 pred_pack 和 gt_pack
-        # 因此这里对于gene_pred的维度变换，要塞回 pred_pack.gene_pred 去
+        # 因此这里对于 gene_pred 的维度变换，要塞回 pred_pack.gene_pred 去
         pred, target = self._get_preds_and_target(batch, pred_pack, padded=True)
-        # DE真实值与direction真实值
+        # DE 真实值与 direction 真实值
         p_vals_gt, direction_gt = self._get_p_vals_and_direction(batch, pred_pack, padded=True)
 
         gt_pack = ModelGroundTruth(
@@ -1142,9 +1142,9 @@ class VAETransitionPerturbationModel(PerturbationModel):
         pred_pack = self.forward(batch, padded=False)
         # 路边
         confidence_pred = pred_pack.confidence_pred
-        # gene预测值与真实值
+        # gene 预测值与真实值
         pred, target = self._get_preds_and_target(batch, pred_pack, padded=False)
-        # DE真实值与direction真实值
+        # DE真实值与 direction 真实值
         p_vals_gt, direction_gt = self._get_p_vals_and_direction(batch, pred_pack, padded=False)
 
         gt_pack = ModelGroundTruth(
@@ -1181,9 +1181,9 @@ class VAETransitionPerturbationModel(PerturbationModel):
         latent_output = pred_pack.gene_pred
         confidence_pred = pred_pack.confidence_pred
 
-        p_vals_pred = torch.sigmoid(pred_pack.p_vals_logits)
-        # DE真实值与direction真实值
-        p_vals_gt, direction_gt = self._get_p_vals_and_direction(batch, pred_pack, padded=padded)
+        p_vals_pred = torch.sigmoid(pred_pack.p_vals_logits) if self.predict_DE else None 
+        
+        p_vals_gt, direction_gt = self._get_p_vals_and_direction(batch, pred_pack, padded=padded) if self.predict_DE and self.predict_direction else None, None
 
         output_dict = {
             "preds": latent_output,
