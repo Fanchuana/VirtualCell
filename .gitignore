@@ -11,4 +11,5 @@ model_weights/
 __pycache__
 *.pyc
 *.venv
+*.log
 
