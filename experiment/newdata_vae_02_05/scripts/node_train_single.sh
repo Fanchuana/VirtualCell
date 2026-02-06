@@ -4,7 +4,7 @@
 TASK=${1:-"fewshot"}
 CELL=${2:-"jurkat"}
 STAGE=${3:-"train"}
-CONFIG_NAME=${4:-"newdata_vae_02_05"}
+CONFIG_NAME=${4:-"vae_MMD_lr001"}
 GPU_ID=${5:-0}
 LOSS_TYPE=${6:-ba}
 LR=${7:-0.001}
@@ -12,7 +12,7 @@ LR=${7:-0.001}
 # --- 2. 变量继承与初始化 ---
 # 如果父脚本 export 了这些变量，这里会直接引用；否则使用冒号后的默认值
 PROJECT_PATH=${PROJECT_PATH:-"/work/home/cryoem666/czx/project/state_training_debug"}
-EXP_NAME=${EXP_NAME:-"re_vae_02_02"}
+EXP_NAME=${EXP_NAME:-"newdata_vae_02_05"}
 TIMESTAMP=${TIMESTAMP:-$(date +%m_%d_%H_%M_%S)}
 
 # --- 3. 日志目录配置 ---
