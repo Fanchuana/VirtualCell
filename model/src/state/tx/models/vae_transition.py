@@ -588,7 +588,8 @@ class VAETransitionPerturbationModel(PerturbationModel):
         # [TODO] 使用VAE 从transf的输出中解码出HVG
         # 类似encoder, 进行展平操作
         vae_latent = self.transf2vae_dim_decoder(expr)
-        expr = self.vae_enordecode(expr, self.vae_decoder)
+        # [???] expr = self.vae_enordecode(expr, self.vae_decoder)
+        expr = self.vae_enordecode(vae_latent, self.vae_decoder)
 
         return expr, vae_latent
 
