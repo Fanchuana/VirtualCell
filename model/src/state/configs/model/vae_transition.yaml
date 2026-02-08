@@ -7,16 +7,22 @@ kwargs:
     main_loss_kwargs:
       use_main_loss: True
       type: ba
+      gene_mean: False
       sinkhorn_weight: 1
       mean_weight: 1
+      cos_weight: 0
+      var_weight: 0
       cov_weight: 1
       blur: 0.05
     vae_loss_kwargs:
       use_vae_loss: True
       type: ba
       weight: 1
+      gene_mean: False
       sinkhorn_weight: 1
       mean_weight: 1
+      cos_weight: 0
+      var_weight: 0
       cov_weight: 1
       blur: 0.05
     DE_loss_kwargs:

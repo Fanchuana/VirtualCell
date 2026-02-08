@@ -19,6 +19,7 @@ class ModelGroundTruth:
     训练时 GroundTruth 的数据类, 统一管理所有可能的返回值
     """
     gene_gt: torch.Tensor
+    ctrl: torch.Tensor
     p_vals_gt: Optional[torch.Tensor] = None
     direction_gt: Optional[torch.Tensor] = None
 

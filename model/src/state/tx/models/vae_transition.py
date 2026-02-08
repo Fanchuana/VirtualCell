@@ -28,11 +28,14 @@ class BioAlignedLoss(nn.Module):
     Combined Sinkhorn + L_mean + L_cov
     """
 
-    def __init__(self, sinkhorn_weight=1.0, mean_weight=1.0, cov_weight=1.0, blur=0.05, sinkhorn_backend="auto"):
+    def __init__(self, sinkhorn_weight=1.0, mean_weight=1.0, cos_weight=0, var_weight=0, cov_weight=1.0, blur=0.05, sinkhorn_backend="auto", gene_mean=False):
         super().__init__()
         self.sinkhorn_weight = sinkhorn_weight
         self.mean_weight = mean_weight
+        self.cos_weight = cos_weight
+        self.var_weight = var_weight
         self.cov_weight = cov_weight
+        self.gene_mean = gene_mean
         self.loss_dict = {}   # 记录损失值，输入日志
 
         if sinkhorn_weight > 0:
@@ -40,42 +43,94 @@ class BioAlignedLoss(nn.Module):
 
     @classmethod
     def from_loss_kwargs(cls, kwargs):
-        sinkhorn_weight = kwargs.get("sinkhorn_weight", 1)
-        mean_weight = kwargs.get("mean_weight", 1)
-        cov_weight = kwargs.get("cov_weight", 1)
-        sinkhorn_backend = kwargs.get("sinkhorn_backend", "auto")
-        blur = kwargs.get("blur", 0.05)
-
         return cls(
-            sinkhorn_weight=sinkhorn_weight, 
-            mean_weight=mean_weight, 
-            cov_weight=cov_weight, 
-            blur=blur, 
-            sinkhorn_backend=sinkhorn_backend
+            sinkhorn_weight=kwargs.get("sinkhorn_weight", 1.0), 
+            mean_weight=kwargs.get("mean_weight", 1.0), 
+            cos_weight=kwargs.get("cos_weight", 0), 
+            var_weight=kwargs.get("var_weight", 0), 
+            cov_weight=kwargs.get("cov_weight", 1.0), 
+            blur=kwargs.get("blur", 0.05), 
+            sinkhorn_backend=kwargs.get("sinkhorn_backend", "auto"),
+            gene_mean=kwargs.get("gene_mean", False),
         )
 
-    def forward(self, pred, target):
+    def forward(self, pred, target, ctrl):
         batch_size = pred.shape[0]
         device = pred.device
         total_loss = torch.zeros(batch_size, device=device)
 
+        # 先在 Sentence 维度取平均，得到 (B, S, D) -> (B, D) 的 Pseudo-bulk
+        # print("="*30 + "before_mu_shape" + "="*30)
+        # print(pred.shape)
+        # print(target.shape)
+        # print(ctrl.shape)
+        mu_pred = pred.mean(dim=1)
+        mu_target = target.mean(dim=1)
+        mu_ctrl = ctrl.mean(dim=1)
+        # print("="*30 + "mu_shape" + "="*30)
+        # print(mu_pred.shape)
+        # print(mu_target.shape)
+        # print(mu_ctrl.shape)
         # L_sd
+        # gene_mean: 考虑到 sd 损失计算的是两个分布之间的 OT cost, 2000 维会导致这个损失的值特别大
+        # 尝试除以 gene 数, 计算每个基因平均的运输成本
         if self.sinkhorn_weight > 0:
-            sinkhorn_loss = self.sinkhorn_loss(pred, target) 
+            sinkhorn_loss = self.sinkhorn_loss(pred, target)
+            if self.gene_mean:
+                n_genes = pred.shape[-1]
+                sinkhorn_loss = sinkhorn_loss / n_genes
             total_loss += self.sinkhorn_weight * sinkhorn_loss
             self.loss_dict["l_sd"] = sinkhorn_loss.nanmean().item()
 
-        # L_mean
+        # L_mean (基础数值逼近)
+        # gene_mean: L_mean 同样过大了, 尝试同样在 gene 层面做平均
         if self.mean_weight > 0:
-            # 对一个sentence内的S个细胞做平均 (B, S, D)
-            mu_pred = pred.mean(dim=1)
-            mu_target = target.mean(dim=1)
             # L1距离
-            mean_loss = torch.abs(mu_pred - mu_target).sum(dim=-1)
+            if self.gene_mean:
+                mean_loss = torch.abs(mu_pred - mu_target).mean(dim=-1)
+            else:
+                mean_loss = torch.abs(mu_pred - mu_target).sum(dim=-1)
             total_loss += self.mean_weight * mean_loss
             self.loss_dict["l_mean"] = mean_loss.nanmean().item()
         
+        # L_cos (方向对齐)
+        # 计算相对于 ctrl 的变化量 delta
+        if self.cos_weight > 0:
+            
+            delta_pred = mu_pred - mu_ctrl
+            delta_target = mu_target - mu_ctrl
+            
+            # 计算余弦相似度 (-1 到 1)
+            # dim=1 表示在基因维度计算向量夹角
+            cos_sim = F.cosine_similarity(delta_pred, delta_target, dim=1, eps=1e-8)
+            # 转换为 Loss (1 - cos) / 2，范围 0 到 1
+            # 0 表示方向完全一致，1 表示方向完全相反
+            cos_loss = (1.0 - cos_sim) / 2
+            
+            total_loss += self.cos_weight * cos_loss 
+            self.loss_dict["l_cos"] = cos_loss.nanmean().item()
+
+        # L_var (离散度对齐)
+        # 先把 (B, S, D) 展平为 (B*S, D)
+        # 在 Batch 维度计算每个基因的方差, 比较的是整个 Batch 的基因方差分布 -> 得到 (D,) 向量
+        # 因为我们的一个 Batch 理论上是一群生物学背景完全相同的细胞, 因此一个Batch 公用同一个 L_var
+        if self.var_weight > 0:
+            flat_pred = pred.reshape(-1, n_genes)
+            flat_target = target.reshape(-1, n_genes)
+            
+            var_pred = flat_pred.var(dim=0)
+            var_target = flat_target.var(dim=0)
+            # 计算方差的差异
+            var_loss = torch.abs(var_pred - var_target).mean()
+
+            # var_loss 是标量, 不过会在这里再度广播为 (B), 最后在外部再被 mean() 处理回原样
+            total_loss += self.var_weight * var_loss
+            self.loss_dict["l_var"] = var_loss.item()
+
         # L_cov
+        # 由于 S << D， 计算协方差矩阵是秩亏的，包含大量噪声。
+        # 计算两个巨大的、由少量样本估计出的噪声矩阵之间的 F 范数非常难收敛，且梯度方差极大，会干扰其他损失的学习
+        # 尝试直接关闭 L_cov
         if self.cov_weight > 0:
             cov_loss = torch.zeros(batch_size, device=device)
             for b in range(batch_size):
@@ -245,22 +300,22 @@ class VAETransitionPerturbationModel(PerturbationModel):
         self.use_main_loss = main_loss_kwargs.get("use_main_loss", True)
         if self.use_main_loss:
             blur = main_loss_kwargs.get("blur", 0.05)
-            main_loss_name = main_loss_kwargs.get("type", "energy")
-            if main_loss_name == "energy":
+            self.main_loss_name = main_loss_kwargs.get("type", "energy")
+            if self.main_loss_name == "energy":
                 self.main_loss_fn = SamplesLoss(loss=self.distributional_loss, blur=blur)
-            elif main_loss_name == "mse":
+            elif self.main_loss_name == "mse":
                 self.main_loss_fn = nn.MSELoss()
-            elif main_loss_name == "se":
+            elif self.main_loss_name == "se":
                 sinkhorn_weight = main_loss_kwargs.get("sinkhorn_weight", 0.01)  # 1/100 = 0.01
                 energy_weight = main_loss_kwargs.get("energy_weight", 1.0)
                 self.main_loss_fn = CombinedLoss(sinkhorn_weight=sinkhorn_weight, energy_weight=energy_weight, blur=blur)
-            elif main_loss_name == "sinkhorn":
+            elif self.main_loss_name == "sinkhorn":
                 self.main_loss_fn = SamplesLoss(loss="sinkhorn", blur=blur, backend="multiscale")
-            elif main_loss_name == "ba":
+            elif self.main_loss_name == "ba":
                 self.main_loss_fn = BioAlignedLoss.from_loss_kwargs(main_loss_kwargs)
                 print("BA LOSS BUILT:", hasattr(self.main_loss_fn, "loss_dict"))
             else:
-                raise ValueError(f"Unknown main loss function: {main_loss_name}")
+                raise ValueError(f"Unknown main loss function: {self.main_loss_name}")
         
         
         # [TODO] Decode4贡献的vae损失: 
@@ -737,16 +792,17 @@ class VAETransitionPerturbationModel(PerturbationModel):
         gt,
         loss_fn,
         loss_weight,
+        ctrl=None,
         branch_name:str = "vae",
         stage:str = "train",
     ):
         """
         分支损失计算 + 日志记录
         """
-        if stage == "train":
-            branch_loss = loss_fn(pred, gt).nanmean()
+        if isinstance(loss_fn, BioAlignedLoss):
+            branch_loss = loss_fn(pred, gt, ctrl).nanmean() if stage == "train" else loss_fn(pred, gt, ctrl).mean()
         else:
-            branch_loss = loss_fn(pred, gt).mean()     
+            branch_loss = loss_fn(pred, gt).nanmean() if stage == "train" else loss_fn(pred, gt).mean()
         branch_loss = loss_weight * branch_loss       
         if stage == "train" or stage == "test":
             self.log(
@@ -774,15 +830,16 @@ class VAETransitionPerturbationModel(PerturbationModel):
         """
         # 初始化 total_loss 为 0
         total_loss = torch.tensor(0.0, device=self.device)
+        ctrl = gt_pack.ctrl
 
         if self.use_main_loss:
             pred = pred_pack.gene_pred
             target = gt_pack.gene_gt
             # 计算主要损失 X_target and X_pred
-            if stage == "train":
-                main_loss = self.main_loss_fn(pred, target).nanmean()
+            if self.main_loss_name == "ba":
+                main_loss = self.main_loss_fn(pred, target, ctrl).nanmean() if stage == "train" else self.main_loss_fn(pred, target, ctrl).mean()
             else:
-                main_loss = self.main_loss_fn(pred, target).mean()
+                main_loss = self.main_loss_fn(pred, target).nanmean() if stage == "train" else self.main_loss_fn(pred, target).mean()
             # log
             if stage == "train" or stage == "test":
                 if hasattr(self.main_loss_fn, "sinkhorn_loss") and hasattr(self.main_loss_fn, "energy_loss"):
@@ -814,9 +871,11 @@ class VAETransitionPerturbationModel(PerturbationModel):
         if self.use_vae_latent_loss:
             pred_vae_latent = pred_pack.vae_latent_pred
             target_vae_latent = self.vae_enordecode(target, self.vae_encoder)
+            ctrl_vae_latent = self.vae_enordecode(ctrl, self.vae_encoder)
             total_loss += self._cal_and_record_branch_loss(
                 pred=pred_vae_latent,
                 gt=target_vae_latent,
+                ctrl=ctrl_vae_latent,
                 loss_fn=self.vae_latent_loss_fn,
                 loss_weight=self.vae_latent_loss_weight,
                 branch_name="vae",
@@ -892,7 +951,7 @@ class VAETransitionPerturbationModel(PerturbationModel):
             return tensor.reshape(-1, self.cell_sentence_len, self.output_dim)
         return tensor.reshape(1, -1, self.output_dim)
 
-    def _get_preds_and_target(
+    def _get_preds_target_ctrl(
         self,
         batch, 
         pred_pack: ModelForwardOutput, 
@@ -904,8 +963,13 @@ class VAETransitionPerturbationModel(PerturbationModel):
         pred_pack.gene_pred = self._reshape_by_padded(pred_pack.gene_pred, padded)
         target = batch["pert_cell_emb"]
         target = self._reshape_by_padded(target, padded)
+        ctrl = batch["ctrl_cell_emb"].reshape_as(target)
+        # print("="*30 + "shape" + "="*30)
+        # print(pred_pack.gene_pred.shape)
+        # print(target.shape)
+        # print(ctrl.shape)
 
-        return pred_pack.gene_pred, target
+        return pred_pack.gene_pred, target, ctrl
 
     def _get_p_vals_and_direction(
         self,
@@ -944,12 +1008,13 @@ class VAETransitionPerturbationModel(PerturbationModel):
         # 路边
         confidence_pred = pred_pack.confidence_pred
         # gene预测值与真实值
-        pred, target = self._get_preds_and_target(batch, pred_pack, padded)
+        pred, target, ctrl = self._get_preds_target_ctrl(batch, pred_pack, padded)
         # DE真实值与direction真实值
         p_vals_gt, direction_gt = self._get_p_vals_and_direction(batch, pred_pack, padded)
 
         gt_pack = ModelGroundTruth(
             gene_gt=target,
+            ctrl=ctrl,
             p_vals_gt=p_vals_gt,
             direction_gt=direction_gt,
         )
@@ -1086,12 +1151,13 @@ class VAETransitionPerturbationModel(PerturbationModel):
         # gene预测值与真实值
         # 需要注意的是, 我们的 cal_our_loss 读取的是打包好的 pred_pack 和 gt_pack
         # 因此这里对于 gene_pred 的维度变换，要塞回 pred_pack.gene_pred 去
-        pred, target = self._get_preds_and_target(batch, pred_pack, padded=True)
+        pred, target, ctrl = self._get_preds_target_ctrl(batch, pred_pack, padded=True)
         # DE 真实值与 direction 真实值
         p_vals_gt, direction_gt = self._get_p_vals_and_direction(batch, pred_pack, padded=True)
 
         gt_pack = ModelGroundTruth(
             gene_gt=target,
+            ctrl=ctrl,
             p_vals_gt=p_vals_gt,
             direction_gt=direction_gt,
         )
@@ -1144,12 +1210,13 @@ class VAETransitionPerturbationModel(PerturbationModel):
         # 路边
         confidence_pred = pred_pack.confidence_pred
         # gene 预测值与真实值
-        pred, target = self._get_preds_and_target(batch, pred_pack, padded=False)
+        pred, target, ctrl = self._get_preds_target_ctrl(batch, pred_pack, padded=False)
         # DE真实值与 direction 真实值
         p_vals_gt, direction_gt = self._get_p_vals_and_direction(batch, pred_pack, padded=False)
 
         gt_pack = ModelGroundTruth(
             gene_gt=target,
+            ctrl=ctrl,
             p_vals_gt=p_vals_gt,
             direction_gt=direction_gt,
         )
